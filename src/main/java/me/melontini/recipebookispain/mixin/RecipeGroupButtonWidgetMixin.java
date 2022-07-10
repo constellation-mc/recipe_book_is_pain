@@ -28,12 +28,12 @@ public class RecipeGroupButtonWidgetMixin extends ToggleButtonWidget {
     }
 
     @ModifyConstant(method = "<init>", constant = @Constant(intValue = 35, ordinal = 0))
-    private static int init(int constant) {
+    private static int recipe_book_is_pain$init(int constant) {
         return 20;
     }
 
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"), method = "renderButton")
-    private void renderButtons(RecipeGroupButtonWidget instance, MatrixStack matrixStack, int x, int y, int i, int j, int width, int height) {
+    private void recipe_book_is_pain$renderButtons(RecipeGroupButtonWidget instance, MatrixStack matrixStack, int x, int y, int i, int j, int width, int height) {
         instance.drawTexture(matrixStack, this.x, y, i, j, width, height);
     }
 
