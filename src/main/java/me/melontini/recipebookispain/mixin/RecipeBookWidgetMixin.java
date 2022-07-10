@@ -1,6 +1,5 @@
 package me.melontini.recipebookispain.mixin;
 
-import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
@@ -25,6 +24,13 @@ import java.util.List;
 @Mixin(RecipeBookWidget.class)
 public abstract class RecipeBookWidgetMixin {
     @Shadow
+    @Final
+    protected static Identifier TEXTURE;
+    @Unique
+    private static int page = 0;
+    @Unique
+    public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
+    @Shadow
     protected MinecraftClient client;
     @Shadow
     private int parentHeight;
@@ -35,16 +41,8 @@ public abstract class RecipeBookWidgetMixin {
     @Shadow
     @Final
     private List<RecipeGroupButtonWidget> tabButtons;
-
     @Shadow
     private int parentWidth;
-    @Shadow @Final protected static Identifier TEXTURE;
-
-    @Shadow public abstract boolean isOpen();
-
-    @Unique
-    private static int page = 0;
-
     @Unique
     private int pages;
     @Unique
@@ -52,8 +50,8 @@ public abstract class RecipeBookWidgetMixin {
     @Unique
     private ToggleButtonWidget prevPageButton;
 
-    @Unique
-    public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
+    @Shadow
+    public abstract boolean isOpen();
 
     @Inject(at = @At("RETURN"), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
@@ -71,11 +69,9 @@ public abstract class RecipeBookWidgetMixin {
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
         updatePages();
-
-
-        //if (client.world.getTime() % 20 == 0) refreshTabButtons();
         reloadPages();
     }
+
     @Unique
     private void reloadPages() {
         int c = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
@@ -86,11 +82,11 @@ public abstract class RecipeBookWidgetMixin {
             if (pair.getLeft() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
-                    widget.visible = true;
-                    widget.setPos(c, b + 27 * l++);
                     if (l == 6) {
                         l = 0;
                     }
+                    widget.visible = true;
+                    widget.setPos(c, b + 27 * l++);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     if (l == 6) {
                         l = 0;
@@ -132,15 +128,19 @@ public abstract class RecipeBookWidgetMixin {
     @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
     private void recipe_book_is_pain$refresh(CallbackInfo ci) {
         groupTab.clear();
+        this.pages = 0;
         int l = 0;
         int p = 0;
         //I'm in pain
-        for (RecipeGroupButtonWidget recipeGroupButtonWidget : this.tabButtons) {
-            p++;
-            l++;
-            groupTab.add(new Pair<>((int) Math.ceil(p / 6), recipeGroupButtonWidget));
-            if (l == 6) {
-                l = 0;
+        for (RecipeGroupButtonWidget widget : this.tabButtons) {
+            RecipeBookGroup recipeBookGroup = widget.getCategory();
+            if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
+                p++;
+                l++;
+                groupTab.add(new Pair<>((int) Math.ceil(p / 6), widget));
+                if (l == 6) {
+                    l = 0;
+                }
             }
         }
 
