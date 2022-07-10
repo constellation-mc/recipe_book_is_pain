@@ -49,7 +49,7 @@ public class RecipeBookWidgetMixin {
             } else if (recipeGroupButtonWidget.hasKnownRecipes(recipeBook)) {
                 p++;
                 a = (int) Math.ceil(p / 6);
-                if (l / 6 == 1 | l / 6 == 2 | l / 6 == 3 | l / 6 == 4 | l / 6 == 5) {
+                if (l / 6 == 1 | l / 6 == 2 | l / 6 == 3 | l / 6 == 4 | l / 6 == 5 | l / 6 == 6 | l / 6 == 7) {
                     l = 0;
                 }
                 recipeGroupButtonWidget.setPos(i - 20 * a, j + 27 * l++);
