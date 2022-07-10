@@ -72,9 +72,9 @@ public class RecipeBookGroupMixin {
         }
         CRAFTING_SEARCH_MAP = craftingSearchMap;
         CRAFTING_MAP = craftingMap;
-        RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
 
         field_1805 = groups.toArray(new RecipeBookGroup[0]);
+        RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
     }
 
     @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)
