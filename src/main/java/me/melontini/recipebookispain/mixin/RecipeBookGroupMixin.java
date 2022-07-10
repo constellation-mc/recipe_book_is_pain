@@ -7,8 +7,6 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,7 +51,7 @@ public class RecipeBookGroupMixin {
     private static List<RecipeBookGroup> CRAFTING_MAP;
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER))
-    private static void addCustomVariant(CallbackInfo ci) {
+    private static void recipe_book_is_pain$addCustomGroups(CallbackInfo ci) {
         var groups = new ArrayList<>(Arrays.asList(field_1805));
         var last = groups.get(groups.size() - 1);
 
@@ -80,7 +78,7 @@ public class RecipeBookGroupMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)
-    private static void getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
+    private static void recipe_book_is_pain$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
         if (category == RecipeBookCategory.CRAFTING) cir.setReturnValue(CRAFTING_MAP);
     }
 

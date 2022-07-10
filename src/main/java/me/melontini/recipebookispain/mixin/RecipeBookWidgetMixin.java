@@ -33,7 +33,7 @@ public class RecipeBookWidgetMixin {
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
-    private void refresh(CallbackInfo ci) {
+    private void recipe_book_is_pain$refresh(CallbackInfo ci) {
         int i = (this.parentWidth - 147) / 2 - this.leftOffset - 16;
         int j = (this.parentHeight - 166) / 2 + 3;
         int l = 0;

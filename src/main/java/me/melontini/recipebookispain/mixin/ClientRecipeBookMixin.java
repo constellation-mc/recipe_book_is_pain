@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ClientRecipeBook.class)
 public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
-    private static void pain2(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
+    private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         RecipeType<?> recipeType = recipe.getType();
         if (recipeType == RecipeType.CRAFTING) {
             ItemStack itemStack = recipe.getOutput();
