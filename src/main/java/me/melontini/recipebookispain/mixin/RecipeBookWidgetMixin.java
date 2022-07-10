@@ -85,8 +85,8 @@ public abstract class RecipeBookWidgetMixin {
                     if (l == 6) {
                         l = 0;
                     }
-                    widget.visible = true;
                     widget.setPos(c, b + 27 * l++);
+                    widget.visible = true;
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     if (l == 6) {
                         l = 0;
