@@ -21,19 +21,5 @@ import java.util.List;
 public class EarlyRiser implements Runnable{
     @Override
     public void run() {
-
-
-
-        /*if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            final MappingResolver mappingResolver = FabricLoader.getInstance().getMappingResolver();
-
-            List<ItemGroup> groupList = new ArrayList<>();
-
-            final String recipeBookGroup = mappingResolver.mapClassName("named", "net.minecraft.client.recipebook.RecipeBookGroup");
-            final String itemStacks = "[L" + mappingResolver.mapClassName("named", "net.minecraft.item.ItemStack") + ";";
-
-            EnumAdder adder = ClassTinkerers.enumBuilder(recipeBookGroup, itemStacks);
-            adder.build();
-        }*/
     }
 }

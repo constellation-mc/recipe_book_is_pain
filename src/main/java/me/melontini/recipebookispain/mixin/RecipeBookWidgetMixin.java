@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,18 +17,19 @@ import java.util.List;
 @Mixin(RecipeBookWidget.class)
 public class RecipeBookWidgetMixin {
     @Shadow
+    protected MinecraftClient client;
+    @Shadow
     private int parentHeight;
-
-    @Shadow private int leftOffset;
-
-    @Shadow private ClientRecipeBook recipeBook;
-
-    @Shadow protected MinecraftClient client;
-
-    @Shadow @Final
+    @Shadow
+    private int leftOffset;
+    @Shadow
+    private ClientRecipeBook recipeBook;
+    @Shadow
+    @Final
     private List<RecipeGroupButtonWidget> tabButtons;
 
-    @Shadow private int parentWidth;
+    @Shadow
+    private int parentWidth;
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
@@ -41,7 +41,7 @@ public class RecipeBookWidgetMixin {
         int a;
 
         //I'm in pain
-        for(RecipeGroupButtonWidget recipeGroupButtonWidget : this.tabButtons) {
+        for (RecipeGroupButtonWidget recipeGroupButtonWidget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = recipeGroupButtonWidget.getCategory();
             if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
                 recipeGroupButtonWidget.visible = true;

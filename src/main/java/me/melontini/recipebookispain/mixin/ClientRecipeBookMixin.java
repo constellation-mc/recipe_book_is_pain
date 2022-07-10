@@ -21,10 +21,8 @@ public class ClientRecipeBookMixin {
             ItemStack itemStack = recipe.getOutput();
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
-                //System.out.println(itemGroup.getName());
-                //System.out.println(ClassTinkerers.getEnum(RecipeBookGroup.class,"P_CRAFTING_" + itemGroup.getName().toUpperCase()).getIcons());
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    cir.setReturnValue(ClassTinkerers.getEnum(RecipeBookGroup.class,"P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_")));
+                    cir.setReturnValue(ClassTinkerers.getEnum(RecipeBookGroup.class, "P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_")));
             }
         }
     }
