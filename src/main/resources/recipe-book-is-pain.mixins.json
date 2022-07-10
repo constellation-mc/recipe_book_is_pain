@@ -9,8 +9,7 @@
     "Accessor",
     "ClientRecipeBookMixin",
     "RecipeBookGroupMixin",
-    "RecipeBookWidgetMixin",
-    "RecipeGroupButtonWidgetMixin"
+    "RecipeBookWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
