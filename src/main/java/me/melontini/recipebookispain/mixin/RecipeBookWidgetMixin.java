@@ -106,16 +106,13 @@ public abstract class RecipeBookWidgetMixin {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (page <= this.pages) ++page;
                 updatePages();
-                //RecipeBookIsPainClient.LOGGER.info(page);
                 cir.setReturnValue(true);
             } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (page > 0) --page;
                 updatePages();
-                //RecipeBookIsPainClient.LOGGER.info(page);
                 cir.setReturnValue(true);
             }
         }
-        //RecipeBookIsPainClient.LOGGER.info(pages);
     }
 
     private void updatePages() {
@@ -129,18 +126,13 @@ public abstract class RecipeBookWidgetMixin {
     private void recipe_book_is_pain$refresh(CallbackInfo ci) {
         groupTab.clear();
         this.pages = 0;
-        int l = 0;
         int p = 0;
         //I'm in pain
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
             if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
-                p++;
-                l++;
                 groupTab.add(new Pair<>((int) Math.ceil(p / 6), widget));
-                if (l == 6) {
-                    l = 0;
-                }
+                p++;
             }
         }
 

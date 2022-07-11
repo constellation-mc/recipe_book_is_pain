@@ -1,7 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -11,13 +10,13 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Mixin(RecipeBookGroup.class)
 @Unique
@@ -35,22 +34,19 @@ public class RecipeBookGroupMixin {
 
     @Unique
     private static List<RecipeBookGroup> CRAFTING_SEARCH_MAP;
-    @Final
-    @Shadow
-    @Mutable
-    public static Map<RecipeBookGroup, List<RecipeBookGroup>> SEARCH_MAP = ImmutableMap.of(
-            RecipeBookGroup.CRAFTING_SEARCH,
-            CRAFTING_SEARCH_MAP,
-            RecipeBookGroup.FURNACE_SEARCH,
-            ImmutableList.of(RecipeBookGroup.FURNACE_FOOD, RecipeBookGroup.FURNACE_BLOCKS, RecipeBookGroup.FURNACE_MISC),
-            RecipeBookGroup.BLAST_FURNACE_SEARCH,
-            ImmutableList.of(RecipeBookGroup.BLAST_FURNACE_BLOCKS, RecipeBookGroup.BLAST_FURNACE_MISC),
-            RecipeBookGroup.SMOKER_SEARCH,
-            ImmutableList.of(RecipeBookGroup.SMOKER_FOOD));
     @Unique
     private static List<RecipeBookGroup> CRAFTING_MAP;
 
-    @Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER))
+    // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
+    @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), method = "<clinit>")
+    private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
+        if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
+            return (ImmutableList<E>) ImmutableList.copyOf(CRAFTING_SEARCH_MAP);
+        }
+        return ImmutableList.of(e1, e2, e3, e4);
+    }
+
+    @Inject(at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER), method = "<clinit>")
     private static void recipe_book_is_pain$addCustomGroups(CallbackInfo ci) {
         var groups = new ArrayList<>(Arrays.asList(field_1805));
         var last = groups.get(groups.size() - 1);
