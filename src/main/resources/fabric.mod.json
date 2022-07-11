@@ -17,17 +17,13 @@
     ],
     "main": [
       "me.melontini.recipebookispain.RecipeBookIsPain"
-    ],
-    "mm:early_risers": [
-      "me.melontini.recipebookispain.EarlyRiser"
     ]
   },
   "mixins": [
     "recipe-book-is-pain.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.8",
-    "fabric": "*",
-    "minecraft": "1.19"
+    "fabricloader": "*",
+    "minecraft": ">=1.19"
   }
 }

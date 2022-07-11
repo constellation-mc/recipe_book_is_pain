@@ -115,6 +115,7 @@ public abstract class RecipeBookWidgetMixin {
         }
     }
 
+    @Unique
     private void updatePages() {
         this.nextPageButton.visible = this.pages > 0 && page < this.pages;
         this.prevPageButton.visible = this.pages > 0 && page != 0;
@@ -127,7 +128,7 @@ public abstract class RecipeBookWidgetMixin {
         groupTab.clear();
         this.pages = 0;
         int p = 0;
-        //I'm in pain
+
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
             if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
@@ -137,7 +138,6 @@ public abstract class RecipeBookWidgetMixin {
         }
 
         this.pages = (int) Math.ceil(p / 6);
-        //RecipeBookIsPainClient.LOGGER.info(groupTab);
 
         ci.cancel();
     }
