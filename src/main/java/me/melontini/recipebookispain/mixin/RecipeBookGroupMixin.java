@@ -22,11 +22,6 @@ import java.util.List;
 @Unique
 public class RecipeBookGroupMixin {
     //me when I can't use Fabric ASM
-    //So much sinnery here
-    //this is a mess btw
-
-    //private final static synthetic [Lnet/minecraft/client/recipebook/RecipeBookGroup; field_1805
-
     @Shadow
     @Final
     @Mutable
