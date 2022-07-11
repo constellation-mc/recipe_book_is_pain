@@ -27,7 +27,7 @@ public abstract class RecipeBookWidgetMixin {
     @Final
     protected static Identifier TEXTURE;
     @Unique
-    private static int page = 0;
+    private int page = 0;
     @Unique
     public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
     @Shadow
@@ -66,33 +66,22 @@ public abstract class RecipeBookWidgetMixin {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        updatePageSwitchButtons();
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
         updatePages();
-        reloadPages();
     }
 
     @Unique
-    private void reloadPages() {
-        int c = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
-        int b = (this.parentHeight - 166) / 2 + 3;
-        int l = 0;
+    private void updatePages() {
         for (Pair<Integer, RecipeGroupButtonWidget> pair : groupTab) {
             RecipeGroupButtonWidget widget = pair.getRight();
             if (pair.getLeft() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
-                    widget.setPos(c, b + 27 * l++);
                     widget.visible = true;
-                    if (l == 6) {
-                        l = 0;
-                    }
                 } else if (widget.hasKnownRecipes(recipeBook)) {
-                    widget.setPos(c, b + 27 * l++);
                     widget.checkForNewRecipes(this.client);
-                    if (l == 6) {
-                        l = 0;
-                    }
                 }
             } else {
                 widget.visible = false;
@@ -104,21 +93,21 @@ public abstract class RecipeBookWidgetMixin {
     private void recipe_book_is_pain$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (this.isOpen() && !this.client.player.isSpectator()) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
-                if (page <= this.pages) ++page;
-                updatePages();
+                if (this.page <= this.pages) ++this.page;
+                updatePageSwitchButtons();
                 cir.setReturnValue(true);
             } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
-                if (page > 0) --page;
-                updatePages();
+                if (this.page > 0) --this.page;
+                updatePageSwitchButtons();
                 cir.setReturnValue(true);
             }
         }
     }
 
     @Unique
-    private void updatePages() {
-        this.nextPageButton.visible = this.pages > 0 && page < this.pages;
-        this.prevPageButton.visible = this.pages > 0 && page != 0;
+    private void updatePageSwitchButtons() {
+        this.nextPageButton.visible = this.pages > 0 && this.page < this.pages;
+        this.prevPageButton.visible = this.pages > 0 && this.page != 0;
     }
 
 
@@ -128,11 +117,19 @@ public abstract class RecipeBookWidgetMixin {
         groupTab.clear();
         this.pages = 0;
         int p = 0;
+        int c = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
+        int b = (this.parentHeight - 166) / 2 + 3;
+        int l = 0;
 
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
             if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
                 groupTab.add(new Pair<>((int) Math.ceil(p / 6), widget));
+                widget.visible = false;
+                widget.setPos(c, b + 27 * l++);
+                if (l == 6) {
+                    l = 0;
+                }
                 p++;
             }
         }

@@ -33,7 +33,7 @@ public class RecipeBookGroupMixin {
     private static List<RecipeBookGroup> CRAFTING_MAP;
 
     // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
-    @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), method = "<clinit>")
+    @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), remap = false, method = "<clinit>")
     private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
         if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
             return (ImmutableList<E>) ImmutableList.copyOf(CRAFTING_SEARCH_MAP);
