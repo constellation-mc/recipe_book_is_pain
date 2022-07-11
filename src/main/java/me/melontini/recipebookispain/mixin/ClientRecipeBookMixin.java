@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientRecipeBook.class)
+@Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {

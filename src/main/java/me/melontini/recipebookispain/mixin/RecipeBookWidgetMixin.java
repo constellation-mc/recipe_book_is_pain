@@ -82,17 +82,17 @@ public abstract class RecipeBookWidgetMixin {
             if (pair.getLeft() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
-                    if (l == 6) {
-                        l = 0;
-                    }
                     widget.setPos(c, b + 27 * l++);
                     widget.visible = true;
-                } else if (widget.hasKnownRecipes(recipeBook)) {
                     if (l == 6) {
                         l = 0;
                     }
+                } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.setPos(c, b + 27 * l++);
                     widget.checkForNewRecipes(this.client);
+                    if (l == 6) {
+                        l = 0;
+                    }
                 }
             } else {
                 widget.visible = false;
