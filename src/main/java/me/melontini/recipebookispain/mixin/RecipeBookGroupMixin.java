@@ -49,6 +49,7 @@ public class RecipeBookGroupMixin {
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
                 var group1 = Accessor.newGroup("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
+                RecipeBookIsPainClient.ADDED_GROUPS.put("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), group1);
                 groups.add(group1);
             }
         }
