@@ -50,9 +50,6 @@ public abstract class RecipeBookWidgetMixin {
     @Unique
     private StateSwitchingButton prevPageButton;
 
-    @Shadow
-    private boolean visible;
-
     @Shadow public abstract boolean isVisible();
 
     @Inject(at = @At("RETURN"), method = "init")
