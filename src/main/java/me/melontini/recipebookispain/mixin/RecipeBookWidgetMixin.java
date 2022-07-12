@@ -1,14 +1,14 @@
 package me.melontini.recipebookispain.mixin;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
-import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.recipebook.ClientRecipeBook;
-import net.minecraft.client.recipebook.RecipeBookGroup;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.ClientRecipeBook;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookTabButton;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import org.apache.commons.compress.utils.Lists;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,67 +21,69 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(RecipeBookComponent.class)
 public abstract class RecipeBookWidgetMixin {
     @Shadow
     @Final
-    protected static Identifier TEXTURE;
+    protected static ResourceLocation RECIPE_BOOK_LOCATION;
     @Unique
     private int page = 0;
     @Unique
-    public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
+    public List<Tuple<Integer, RecipeBookTabButton>> groupTab = Lists.newArrayList();
     @Shadow
-    protected MinecraftClient client;
+    protected Minecraft minecraft;
     @Shadow
-    private int parentHeight;
+    private int height;
     @Shadow
-    private int leftOffset;
+    private int xOffset;
     @Shadow
-    private ClientRecipeBook recipeBook;
+    private ClientRecipeBook book;
     @Shadow
     @Final
-    private List<RecipeGroupButtonWidget> tabButtons;
+    private List<RecipeBookTabButton> tabButtons;
     @Shadow
-    private int parentWidth;
+    private int width;
     @Unique
     private int pages;
     @Unique
-    private ToggleButtonWidget nextPageButton;
+    private StateSwitchingButton nextPageButton;
     @Unique
-    private ToggleButtonWidget prevPageButton;
+    private StateSwitchingButton prevPageButton;
 
     @Shadow
-    public abstract boolean isOpen();
+    private boolean visible;
 
-    @Inject(at = @At("RETURN"), method = "reset")
+    @Shadow public abstract boolean isVisible();
+
+    @Inject(at = @At("RETURN"), method = "init")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
-        int a = (this.parentWidth - 147) / 2 - this.leftOffset;
-        int s = (this.parentHeight + 166) / 2;
-        this.nextPageButton = new ToggleButtonWidget(a + 10, s, 12, 17, false);
-        this.nextPageButton.setTextureUV(1, 208, 13, 18, TEXTURE);
-        this.prevPageButton = new ToggleButtonWidget(a - 10, s, 12, 17, true);
-        this.prevPageButton.setTextureUV(1, 208, 13, 18, TEXTURE);
+        int a = (this.width - 147) / 2 - this.xOffset;
+        int s = (this.height + 166) / 2;
+        this.nextPageButton = new StateSwitchingButton(a + 10, s, 12, 17, false);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, RECIPE_BOOK_LOCATION);
+        this.prevPageButton = new StateSwitchingButton(a - 10, s, 12, 17, true);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, RECIPE_BOOK_LOCATION);
         page = 0;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
-    private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", shift = At.Shift.BEFORE), method = "render")
+    private void recipe_book_is_pain$render(PoseStack poseStack, int i, int j, float f, CallbackInfo ci) {
         updatePageSwitchButtons();
-        this.prevPageButton.render(matrices, mouseX, mouseY, delta);
-        this.nextPageButton.render(matrices, mouseX, mouseY, delta);
+        this.prevPageButton.render(poseStack, i, j, f);
+        this.nextPageButton.render(poseStack, i, j, f);
         updatePages();
     }
 
     @Unique
     private void updatePages() {
-        for (Pair<Integer, RecipeGroupButtonWidget> pair : groupTab) {
-            RecipeGroupButtonWidget widget = pair.getRight();
-            if (pair.getLeft() == page) {
-                RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
+        for (Tuple<Integer, RecipeBookTabButton> pair : groupTab) {
+            RecipeBookTabButton widget = pair.getB();
+            if (pair.getA() == page) {
+                RecipeBookCategories recipeBookGroup = widget.getCategory();
+                if (recipeBookGroup == RecipeBookCategories.CRAFTING_SEARCH || recipeBookGroup == RecipeBookCategories.FURNACE_SEARCH) {
                     widget.visible = true;
-                } else if (widget.hasKnownRecipes(recipeBook)) {
-                    widget.checkForNewRecipes(this.client);
+                } else if (widget.updateVisibility(book)) {
+                    widget.startAnimation(this.minecraft);
                 }
             } else {
                 widget.visible = false;
@@ -91,7 +93,7 @@ public abstract class RecipeBookWidgetMixin {
 
     @Inject(at = @At("HEAD"), method = "mouseClicked", cancellable = true)
     private void recipe_book_is_pain$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isOpen() && !this.client.player.isSpectator()) {
+        if (this.isVisible() && !this.minecraft.player.isSpectator()) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page <= this.pages) ++this.page;
                 updatePageSwitchButtons();
@@ -112,21 +114,21 @@ public abstract class RecipeBookWidgetMixin {
 
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-    @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "updateTabs", cancellable = true)
     private void recipe_book_is_pain$refresh(CallbackInfo ci) {
         groupTab.clear();
         this.pages = 0;
         int p = 0;
-        int c = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
-        int b = (this.parentHeight - 166) / 2 + 3;
+        int c = (this.width - 147) / 2 - this.xOffset - 30;
+        int b = (this.height - 166) / 2 + 3;
         int l = 0;
 
-        for (RecipeGroupButtonWidget widget : this.tabButtons) {
-            RecipeBookGroup recipeBookGroup = widget.getCategory();
-            if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
-                groupTab.add(new Pair<>((int) Math.ceil(p / 6), widget));
+        for (RecipeBookTabButton widget : this.tabButtons) {
+            RecipeBookCategories recipeBookGroup = widget.getCategory();
+            if (recipeBookGroup == RecipeBookCategories.CRAFTING_SEARCH || recipeBookGroup == RecipeBookCategories.FURNACE_SEARCH || widget.updateVisibility(book)) {
+                groupTab.add(new Tuple<>((int) Math.ceil(p / 6), widget));
                 widget.visible = false;
-                widget.setPos(c, b + 27 * l++);
+                widget.setPosition(c, b + 27 * l++);
                 if (l == 6) {
                     l = 0;
                 }
