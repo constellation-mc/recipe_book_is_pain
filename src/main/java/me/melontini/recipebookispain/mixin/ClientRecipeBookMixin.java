@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
-import com.chocohead.mm.api.ClassTinkerers;
+import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -22,7 +22,7 @@ public class ClientRecipeBookMixin {
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    cir.setReturnValue(ClassTinkerers.getEnum(RecipeBookGroup.class, "P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_")));
+                    cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_")));
             }
         }
     }
