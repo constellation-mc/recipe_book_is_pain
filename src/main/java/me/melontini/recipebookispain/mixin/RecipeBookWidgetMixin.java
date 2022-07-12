@@ -57,9 +57,9 @@ public abstract class RecipeBookWidgetMixin {
     private void recipe_book_is_pain$init(CallbackInfo ci) {
         int a = (this.parentWidth - 147) / 2 - this.leftOffset;
         int s = (this.parentHeight + 166) / 2;
-        this.nextPageButton = new ToggleButtonWidget(a + 10, s, 12, 17, false);
+        this.nextPageButton = new ToggleButtonWidget(a + 14, s, 12, 17, false);
         this.nextPageButton.setTextureUV(1, 208, 13, 18, TEXTURE);
-        this.prevPageButton = new ToggleButtonWidget(a - 10, s, 12, 17, true);
+        this.prevPageButton = new ToggleButtonWidget(a - 35, s, 12, 17, true);
         this.prevPageButton.setTextureUV(1, 208, 13, 18, TEXTURE);
         page = 0;
     }
@@ -67,9 +67,23 @@ public abstract class RecipeBookWidgetMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         updatePageSwitchButtons();
+        renderPageText(matrices);
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
         updatePages();
+    }
+
+    @Unique
+    private void renderPageText(MatrixStack matrices) {
+        int x = (this.parentWidth - 135) / 2 - this.leftOffset - 30;
+        int y = (this.parentHeight + 169) / 2 + 3;
+        int displayPage = page + 1;
+        int displayPages = pages + 1;
+        if (this.pages > 0) {
+            String string = "" + displayPage + "/" + displayPages;
+            int textLength = this.client.textRenderer.getWidth(string);
+            this.client.textRenderer.draw(matrices, string, (x - textLength / 2F + 20F), y, -1);
+        }
     }
 
     @Unique
