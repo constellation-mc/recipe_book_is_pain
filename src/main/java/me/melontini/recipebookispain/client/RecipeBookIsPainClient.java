@@ -18,10 +18,6 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
 
     public static Map<String, RecipeBookGroup> ADDED_GROUPS = new HashMap<>();
     public static Map<String, ItemGroup> AAAAAAAA = new HashMap<>();
-
-    static {
-        RecipeBookGroup.values();
-    }
     @Override
     public void onInitializeClient() {
         //null pointers are epic
