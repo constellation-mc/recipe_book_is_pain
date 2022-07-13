@@ -1,5 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
+import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
@@ -7,6 +8,8 @@ import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import org.apache.commons.compress.utils.Lists;
@@ -70,7 +73,7 @@ public abstract class RecipeBookWidgetMixin {
         renderPageText(matrices);
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
-        updatePages();
+        updatePages(mouseX, mouseY, matrices);
     }
 
     @Unique
@@ -86,16 +89,21 @@ public abstract class RecipeBookWidgetMixin {
         }
     }
 
-    @Unique
-    private void updatePages() {
+    @Unique //mmm spaghettio
+    private void updatePages(int mouseX, int mouseY, MatrixStack stack) {
         for (Pair<Integer, RecipeGroupButtonWidget> pair : groupTab) {
             RecipeGroupButtonWidget widget = pair.getRight();
             if (pair.getLeft() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH) {
+                if (recipeBookGroup.toString().contains("SEARCH")) {
                     widget.visible = true;
+                    if (widget.isHovered()) client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
+                    if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()) != null) {
+                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()).getDisplayName();
+                        if (text != null) if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
+                    }
                 }
             } else {
                 widget.visible = false;
