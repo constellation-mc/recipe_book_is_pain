@@ -49,8 +49,9 @@ public class RecipeBookGroupMixin {
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
                 var group1 = Accessor.newGroup("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
-                RecipeBookIsPainClient.ADDED_GROUPS.put("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), group1);
-                RecipeBookIsPainClient.AAAAAAAA.put("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), group);
+                String name = "P_CRAFTING_" + group.toString().toUpperCase().replace(".", "_");
+                RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
+                RecipeBookIsPainClient.AAAAAAAA.put(name, group);
                 groups.add(group1);
             }
         }
