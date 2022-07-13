@@ -24,5 +24,6 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
     }
     @Override
     public void onInitializeClient() {
+        //null pointers are epic
     }
 }
