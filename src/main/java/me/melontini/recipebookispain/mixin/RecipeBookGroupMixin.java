@@ -33,6 +33,7 @@ public class RecipeBookGroupMixin {
     private static List<RecipeBookGroup> CRAFTING_MAP;
 
     // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
+    @SuppressWarnings("unchecked")
     @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), remap = false, method = "<clinit>")
     private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
         if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
@@ -48,8 +49,8 @@ public class RecipeBookGroupMixin {
 
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
-                var group1 = Accessor.newGroup("P_CRAFTING_" + group.getName().toUpperCase().replace(".", "_"), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
-                String name = "P_CRAFTING_" + group.toString().toUpperCase().replace(".", "_");
+                var group1 = Accessor.newGroup("P_CRAFTING_" + group.getIndex(), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
+                String name = "P_CRAFTING_" + group.getIndex();
                 RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
                 RecipeBookIsPainClient.AAAAAAAA.put(name, group);
                 groups.add(group1);
