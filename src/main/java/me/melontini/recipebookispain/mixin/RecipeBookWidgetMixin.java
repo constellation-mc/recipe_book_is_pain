@@ -95,14 +95,14 @@ public abstract class RecipeBookWidgetMixin {
             RecipeGroupButtonWidget widget = pair.getRight();
             if (pair.getLeft() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (recipeBookGroup.toString().contains("SEARCH")) {
+                if (client.currentScreen != null) if (recipeBookGroup.toString().contains("SEARCH")) {
                     widget.visible = true;
                     if (widget.isHovered())
                         client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
                     if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()) != null) {
-                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()).getDisplayName();
+                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
                         if (text != null)
                             if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
                     }
@@ -115,7 +115,7 @@ public abstract class RecipeBookWidgetMixin {
 
     @Inject(at = @At("HEAD"), method = "mouseClicked", cancellable = true)
     private void recipe_book_is_pain$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isOpen() && !this.client.player.isSpectator()) {
+        if (this.client.player != null) if (this.isOpen() && !this.client.player.isSpectator()) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page <= this.pages) ++this.page;
                 updatePageSwitchButtons();
