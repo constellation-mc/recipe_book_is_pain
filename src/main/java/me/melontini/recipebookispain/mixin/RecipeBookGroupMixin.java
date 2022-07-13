@@ -55,6 +55,7 @@ public class RecipeBookGroupMixin {
                 groups.add(group1);
             }
         }
+
         List<RecipeBookGroup> craftingMap = new ArrayList<>();
         List<RecipeBookGroup> craftingSearchMap = new ArrayList<>();
         craftingMap.add(RecipeBookGroup.CRAFTING_SEARCH);

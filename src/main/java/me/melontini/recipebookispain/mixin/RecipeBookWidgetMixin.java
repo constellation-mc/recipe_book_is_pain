@@ -30,11 +30,11 @@ public abstract class RecipeBookWidgetMixin {
     @Final
     protected static Identifier TEXTURE;
     @Unique
-    private int page = 0;
-    @Unique
     public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
     @Shadow
     protected MinecraftClient client;
+    @Unique
+    private int page = 0;
     @Shadow
     private int parentHeight;
     @Shadow
@@ -97,12 +97,14 @@ public abstract class RecipeBookWidgetMixin {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (recipeBookGroup.toString().contains("SEARCH")) {
                     widget.visible = true;
-                    if (widget.isHovered()) client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
+                    if (widget.isHovered())
+                        client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
                     if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()) != null) {
                         Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()).getDisplayName();
-                        if (text != null) if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
+                        if (text != null)
+                            if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
                     }
                 }
             } else {

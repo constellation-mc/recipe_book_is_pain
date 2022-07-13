@@ -24,7 +24,8 @@ public class ClientRecipeBookMixin {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
                     if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.toString().toUpperCase().replace(".", "_")) != null)
                         cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.toString().toUpperCase().replace(".", "_")));
-                else cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.toString().toUpperCase().replace(".", "_")));
+                    else
+                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.toString().toUpperCase().replace(".", "_")));
             }
         }
     }
