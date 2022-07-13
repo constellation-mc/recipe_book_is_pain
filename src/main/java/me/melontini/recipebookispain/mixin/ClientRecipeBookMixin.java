@@ -29,7 +29,7 @@ public class ClientRecipeBookMixin {
                     if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()) != null)
                         cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()));
                     else
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC + group.getIndex()));
+                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
             }
         }
     }
