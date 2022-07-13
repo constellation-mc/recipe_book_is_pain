@@ -158,6 +158,7 @@ public abstract class RecipeBookWidgetMixin {
             }
         }
 
+        --p;
         this.pages = (int) Math.ceil(p / 6);
 
         ci.cancel();
