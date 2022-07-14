@@ -10,7 +10,7 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/recipe-book-is-pain/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "me.melontini.recipebookispain.client.RecipeBookIsPainClient"
