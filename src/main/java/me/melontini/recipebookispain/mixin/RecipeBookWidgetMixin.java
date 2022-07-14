@@ -1,5 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
+import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
 import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
@@ -11,8 +12,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import org.apache.commons.compress.utils.Lists;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,8 +28,6 @@ public abstract class RecipeBookWidgetMixin {
     @Shadow
     @Final
     protected static Identifier TEXTURE;
-    @Unique
-    public List<Pair<Integer, RecipeGroupButtonWidget>> groupTab = Lists.newArrayList();
     @Shadow
     protected MinecraftClient client;
     @Unique
@@ -91,9 +88,9 @@ public abstract class RecipeBookWidgetMixin {
 
     @Unique //mmm spaghettio
     private void updatePages(int mouseX, int mouseY, MatrixStack stack) {
-        for (Pair<Integer, RecipeGroupButtonWidget> pair : groupTab) {
-            RecipeGroupButtonWidget widget = pair.getRight();
-            if (pair.getLeft() == page) {
+        for (RecipeGroupButtonWidget widget : tabButtons) {
+
+            if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (client.currentScreen != null) if (recipeBookGroup.toString().contains("SEARCH")) {
                     widget.visible = true;
@@ -138,7 +135,6 @@ public abstract class RecipeBookWidgetMixin {
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
     private void recipe_book_is_pain$refresh(CallbackInfo ci) {
-        groupTab.clear();
         this.pages = 0;
         int p = 0;
         int c = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
@@ -148,7 +144,7 @@ public abstract class RecipeBookWidgetMixin {
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
             if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
-                groupTab.add(new Pair<>((int) Math.ceil(p / 6), widget));
+                ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
                 widget.visible = false;
                 widget.setPos(c, b + 27 * l++);
                 if (l == 6) {
