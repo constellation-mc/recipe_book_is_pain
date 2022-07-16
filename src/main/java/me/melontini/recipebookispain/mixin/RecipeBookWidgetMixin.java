@@ -68,9 +68,9 @@ public abstract class RecipeBookWidgetMixin {
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         updatePageSwitchButtons();
         renderPageText(matrices);
+        updatePages(mouseX, mouseY, matrices);
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
-        updatePages(mouseX, mouseY, matrices);
     }
 
     @Unique
@@ -92,13 +92,13 @@ public abstract class RecipeBookWidgetMixin {
 
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (client.currentScreen != null) if (recipeBookGroup.toString().contains("SEARCH")) {
+                if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
                     widget.visible = true;
                     if (widget.isHovered())
                         client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
-                    if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.toString()) != null) {
+                    if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()) != null) {
                         Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
                         if (text != null)
                             if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
@@ -143,10 +143,10 @@ public abstract class RecipeBookWidgetMixin {
 
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
-            if (recipeBookGroup == RecipeBookGroup.CRAFTING_SEARCH || recipeBookGroup == RecipeBookGroup.FURNACE_SEARCH || widget.hasKnownRecipes(recipeBook)) {
+            if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
                 ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
-                widget.visible = false;
                 widget.setPos(c, b + 27 * l++);
+                widget.visible = ((RecipeGroupButtonAccess) widget).getPage() == page;
                 if (l == 6) {
                     l = 0;
                 }
