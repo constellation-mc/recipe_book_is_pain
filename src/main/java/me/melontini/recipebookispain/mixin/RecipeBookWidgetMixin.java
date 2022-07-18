@@ -1,5 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
+import me.melontini.recipebookispain.access.RecipeBookWidgetAccess;
 import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
 import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
@@ -10,8 +11,10 @@ import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(RecipeBookWidget.class)
-public abstract class RecipeBookWidgetMixin {
+public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     @Shadow
     @Final
     protected static Identifier TEXTURE;
@@ -52,6 +55,10 @@ public abstract class RecipeBookWidgetMixin {
 
     @Shadow
     public abstract boolean isOpen();
+
+    @Shadow protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
+
+    @Shadow @Nullable private RecipeGroupButtonWidget currentTab;
 
     @Inject(at = @At("RETURN"), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
@@ -89,7 +96,6 @@ public abstract class RecipeBookWidgetMixin {
     @Unique //mmm spaghettio
     private void updatePages(int mouseX, int mouseY, MatrixStack stack) {
         for (RecipeGroupButtonWidget widget : tabButtons) {
-
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
@@ -141,6 +147,21 @@ public abstract class RecipeBookWidgetMixin {
         int b = (this.parentHeight - 166) / 2 + 3;
         int l = 0;
 
+        this.tabButtons.clear();
+        for (RecipeBookGroup group : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
+            var widget = new RecipeGroupButtonWidget(group);
+            if (group.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) this.tabButtons.add(widget);
+        }
+
+        if (this.currentTab != null) {
+            this.currentTab = this.tabButtons.stream().filter((button) ->
+                    button.getCategory().equals(this.currentTab.getCategory())).findFirst().orElse(null);
+        }
+        if (this.currentTab == null) {
+            this.currentTab = this.tabButtons.get(0);
+        }
+        this.currentTab.setToggled(true);
+
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
             if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
@@ -158,5 +179,15 @@ public abstract class RecipeBookWidgetMixin {
         this.pages = (int) Math.ceil(p / 6);
 
         ci.cancel();
+    }
+
+    @Override
+    public int getBookPage() {
+        return page;
+    }
+
+    @Override
+    public void setBookPage(int page) {
+        this.page = page;
     }
 }
