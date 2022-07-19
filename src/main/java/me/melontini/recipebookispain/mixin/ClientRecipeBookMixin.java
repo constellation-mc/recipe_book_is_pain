@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
-import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
+import me.melontini.recipebookispain.RecipeBookIsPain;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
     static {
-        //noinspection ResultOfMethodCallIgnored
         RecipeBookGroup.values();
     }
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
@@ -26,10 +25,10 @@ public class ClientRecipeBookMixin {
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()) != null)
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()));
+                    if (RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()) != null)
+                        cir.setReturnValue(RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()));
                     else
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
+                        cir.setReturnValue(RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
             }
         }
     }

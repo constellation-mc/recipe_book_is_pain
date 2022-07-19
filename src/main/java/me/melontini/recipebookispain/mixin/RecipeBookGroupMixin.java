@@ -1,11 +1,12 @@
 package me.melontini.recipebookispain.mixin;
 
 import com.google.common.collect.ImmutableList;
-import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
+import me.melontini.recipebookispain.RecipeBookIsPain;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraftforge.client.RecipeBookRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,49 +14,36 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Mixin(RecipeBookGroup.class)
+@Mixin(value = RecipeBookGroup.class, priority = 666)
 @Unique
-public class RecipeBookGroupMixin {
-    //me when I can't use Fabric ASM
-    @Shadow
-    @Final
-    @Mutable
-    private static RecipeBookGroup[] field_1805;
+public abstract class RecipeBookGroupMixin {
 
-    @Unique
-    private static List<RecipeBookGroup> CRAFTING_SEARCH_MAP;
     @Unique
     private static List<RecipeBookGroup> CRAFTING_MAP;
 
-    // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
-    @SuppressWarnings("unchecked")
-    @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), remap = false, method = "<clinit>")
-    private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
-        if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
-            return (ImmutableList<E>) ImmutableList.copyOf(CRAFTING_SEARCH_MAP);
-        }
-        return ImmutableList.of(e1, e2, e3, e4);
-    }
-
     @Inject(at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER), method = "<clinit>")
     private static void recipe_book_is_pain$addCustomGroups(CallbackInfo ci) {
-        var groups = new ArrayList<>(Arrays.asList(field_1805));
-        var last = groups.get(groups.size() - 1);
-
+        //RecipeBookIsPain.LOGGER.info("Adding to RecipeBookGroup enum");
         for (ItemGroup group : ItemGroup.GROUPS) {
-            if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
-                var group1 = Accessor.newGroup("P_CRAFTING_" + group.getIndex(), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
+            if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH && group != null) {
                 String name = "P_CRAFTING_" + group.getIndex();
-                RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
-                RecipeBookIsPainClient.AAAAAAAA.put(name, group);
-                groups.add(group1);
+                RecipeBookGroup.create(name, new ItemStack(group.getIcon().getItem()));
+                var group1 = RecipeBookGroup.valueOf(RecipeBookGroup.class, name);
+                RecipeBookIsPain.ADDED_GROUPS.put(name, group1);
+                RecipeBookIsPain.AAAAAAAA.put(name, group);
             }
         }
+
+        var groups = new ArrayList<>(Arrays.asList(RecipeBookGroup.values()));
+
+        Arrays.stream(RecipeBookGroup.values()).toList().forEach(group ->
+                RecipeBookIsPain.LOGGER.info(group.name()));
 
         List<RecipeBookGroup> craftingMap = new ArrayList<>();
         List<RecipeBookGroup> craftingSearchMap = new ArrayList<>();
@@ -66,11 +54,12 @@ public class RecipeBookGroupMixin {
                 craftingSearchMap.add(bookGroup);
             }
         }
-        CRAFTING_SEARCH_MAP = craftingSearchMap;
+
+        RecipeBookIsPain.CRAFTING_SEARCH_MAP = craftingSearchMap;
         CRAFTING_MAP = craftingMap;
 
-        field_1805 = groups.toArray(new RecipeBookGroup[0]);
-        RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
+        RecipeBookRegistry.addCategoriesToType(RecipeBookCategory.CRAFTING, CRAFTING_MAP);
+        RecipeBookIsPain.LOGGER.info("recipe book init complete");
     }
 
     @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)
