@@ -3,13 +3,11 @@
   "minVersion": "0.8",
   "package": "me.melontini.recipebookispain.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "me.melontini.recipebookispain.mixin.MixinConfigPlugin",
   "mixins": [
   ],
   "client": [
-    "Accessor",
+    "ForgeRecipeBookRegistryMixin",
     "ClientRecipeBookMixin",
-    "MouseWheelieCompatMixin",
     "RecipeBookGroupMixin",
     "RecipeBookWidgetMixin",
     "RecipeGroupButtonMixin"

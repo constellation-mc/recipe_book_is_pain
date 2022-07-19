@@ -1,8 +1,8 @@
 package me.melontini.recipebookispain.mixin;
 
+import me.melontini.recipebookispain.RecipeBookIsPain;
 import me.melontini.recipebookispain.access.RecipeBookWidgetAccess;
 import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
-import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
@@ -104,8 +104,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
                         client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
-                    if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()) != null) {
-                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
+                    if (RecipeBookIsPain.AAAAAAAA.get(recipeBookGroup.name()) != null) {
+                        Text text = RecipeBookIsPain.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
                         if (text != null)
                             if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
                     }
