@@ -14,7 +14,6 @@ public class ForgeRecipeBookRegistryMixin {
     @SuppressWarnings("unchecked")
     @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), remap = false, method = "<clinit>")
     private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
-        RecipeBookIsPain.LOGGER.info("Redirecting ImmutableList.of() Call");
         if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
             return (ImmutableList<E>) ImmutableList.copyOf(RecipeBookIsPain.CRAFTING_SEARCH_MAP);
         }
