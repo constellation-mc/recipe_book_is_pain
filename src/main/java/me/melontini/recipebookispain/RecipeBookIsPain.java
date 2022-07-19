@@ -24,11 +24,5 @@ public class RecipeBookIsPain {
     public static List<RecipeBookGroup> CRAFTING_SEARCH_MAP;
 
     public RecipeBookIsPain() {
-        IEventBus MOD_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-        MOD_BUS.addListener(this::clientSetup);
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event) {
-
     }
 }

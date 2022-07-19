@@ -42,9 +42,6 @@ public abstract class RecipeBookGroupMixin {
 
         var groups = new ArrayList<>(Arrays.asList(RecipeBookGroup.values()));
 
-        Arrays.stream(RecipeBookGroup.values()).toList().forEach(group ->
-                RecipeBookIsPain.LOGGER.info(group.name()));
-
         List<RecipeBookGroup> craftingMap = new ArrayList<>();
         List<RecipeBookGroup> craftingSearchMap = new ArrayList<>();
         craftingMap.add(RecipeBookGroup.CRAFTING_SEARCH);
