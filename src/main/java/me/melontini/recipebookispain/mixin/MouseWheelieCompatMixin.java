@@ -25,7 +25,7 @@ public abstract class MouseWheelieCompatMixin {
 
     @SuppressWarnings("ReferenceToMixin")
     @Dynamic(mixin = MixinRecipeBookWidget.class)
-    @Inject(at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget.setToggled (Z)V", ordinal = 1, shift = At.Shift.AFTER), method = "mouseWheelie_scrollRecipeBook", cancellable = true)
+    @Inject(at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget.setToggled (Z)V", ordinal = 1, shift = At.Shift.AFTER), method = "mouseWheelie_scrollRecipeBook")
     private void inject(double mouseX, double mouseY, double scrollAmount, CallbackInfoReturnable<ScrollAction> cir) {
         RecipeBookWidget bookWidget = (RecipeBookWidget) (Object) this;
         if (((RecipeBookWidgetAccess) bookWidget).getBookPage() != ((RecipeGroupButtonAccess) this.currentTab).getPage()) {
