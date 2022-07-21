@@ -1,20 +1,17 @@
 package me.melontini.recipebookispain.mixin;
 
-import com.google.common.collect.ImmutableList;
 import me.melontini.recipebookispain.RecipeBookIsPain;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraftforge.client.RecipeBookRegistry;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +51,6 @@ public abstract class RecipeBookGroupMixin {
 
         RecipeBookIsPain.CRAFTING_SEARCH_MAP = craftingSearchMap;
         CRAFTING_MAP = craftingMap;
-
-        RecipeBookRegistry.addCategoriesToType(RecipeBookCategory.CRAFTING, CRAFTING_MAP);
         RecipeBookIsPain.LOGGER.info("recipe book init complete");
     }
 
