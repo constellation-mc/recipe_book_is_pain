@@ -33,6 +33,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     protected static Identifier TEXTURE;
     @Shadow
     protected MinecraftClient client;
+    @Shadow
+    protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
     @Unique
     private int page = 0;
     @Shadow
@@ -52,13 +54,12 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     private ToggleButtonWidget nextPageButton;
     @Unique
     private ToggleButtonWidget prevPageButton;
+    @Shadow
+    @Nullable
+    private RecipeGroupButtonWidget currentTab;
 
     @Shadow
     public abstract boolean isOpen();
-
-    @Shadow protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
-
-    @Shadow @Nullable private RecipeGroupButtonWidget currentTab;
 
     @Inject(at = @At("RETURN"), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {

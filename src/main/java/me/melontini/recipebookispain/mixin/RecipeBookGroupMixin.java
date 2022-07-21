@@ -49,8 +49,8 @@ public class RecipeBookGroupMixin {
 
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
-                var group1 = Accessor.newGroup("P_CRAFTING_" + group.getIndex(), last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
                 String name = "P_CRAFTING_" + group.getIndex();
+                var group1 = Accessor.newGroup(name, last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
                 RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
                 RecipeBookIsPainClient.AAAAAAAA.put(name, group);
                 groups.add(group1);
@@ -77,5 +77,4 @@ public class RecipeBookGroupMixin {
     private static void recipe_book_is_pain$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
         if (category == RecipeBookCategory.CRAFTING) cir.setReturnValue(CRAFTING_MAP);
     }
-
 }

@@ -18,6 +18,7 @@ public class ClientRecipeBookMixin {
         //noinspection ResultOfMethodCallIgnored
         RecipeBookGroup.values();
     }
+
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         RecipeType<?> recipeType = recipe.getType();
@@ -26,8 +27,8 @@ public class ClientRecipeBookMixin {
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()) != null)
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()));
+                    if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()) != null)
+                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()));
                     else
                         cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
             }
