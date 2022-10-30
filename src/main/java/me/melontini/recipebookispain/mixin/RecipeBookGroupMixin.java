@@ -44,13 +44,13 @@ public class RecipeBookGroupMixin {
 
     @Inject(at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER), method = "<clinit>")
     private static void recipe_book_is_pain$addCustomGroups(CallbackInfo ci) {
-        var groups = new ArrayList<>(Arrays.asList(field_1805));
-        var last = groups.get(groups.size() - 1);
+        ArrayList<RecipeBookGroup> groups = new ArrayList<>(Arrays.asList(field_1805));
+        RecipeBookGroup last = groups.get(groups.size() - 1);
 
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
                 String name = "P_CRAFTING_" + group.getIndex();
-                var group1 = Accessor.newGroup(name, last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
+                RecipeBookGroup group1 = Accessor.newGroup(name, last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
                 RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
                 RecipeBookIsPainClient.AAAAAAAA.put(name, group);
                 groups.add(group1);
@@ -73,7 +73,7 @@ public class RecipeBookGroupMixin {
         RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
     }
 
-    @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "method_30285", cancellable = true)
     private static void recipe_book_is_pain$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
         if (category == RecipeBookCategory.CRAFTING) cir.setReturnValue(CRAFTING_MAP);
     }

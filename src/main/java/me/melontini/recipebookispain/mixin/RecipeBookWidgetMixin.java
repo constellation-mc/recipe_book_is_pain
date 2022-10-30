@@ -72,7 +72,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         page = 0;
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
+    @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;popMatrix()V", shift = At.Shift.BEFORE), method = "render")
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         updatePageSwitchButtons();
         renderPageText(matrices);
@@ -102,11 +102,11 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
                 if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
                     widget.visible = true;
                     if (widget.isHovered())
-                        client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
+                        client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getTranslationKey(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
                     widget.checkForNewRecipes(this.client);
                     if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()) != null) {
-                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
+                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getTranslationKey();
                         if (text != null)
                             if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
                     }
@@ -149,8 +149,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         int l = 0;
 
         this.tabButtons.clear();
-        for (RecipeBookGroup group : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
-            var widget = new RecipeGroupButtonWidget(group);
+        for (RecipeBookGroup group : RecipeBookGroup.method_30285(this.craftingScreenHandler.getCategory())) {
+            RecipeGroupButtonWidget widget = new RecipeGroupButtonWidget(group);
             if (group.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) this.tabButtons.add(widget);
         }
 
