@@ -14,9 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-    static {
-        RecipeBookGroup.values();
-    }
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         RecipeType<?> recipeType = recipe.getType();
@@ -25,8 +22,8 @@ public class ClientRecipeBookMixin {
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    if (RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()) != null)
-                        cir.setReturnValue(RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_"  + group.getIndex()));
+                    if (RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()) != null)
+                        cir.setReturnValue(RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()));
                     else
                         cir.setReturnValue(RecipeBookIsPain.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
             }
