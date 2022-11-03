@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
@@ -50,7 +49,7 @@ public class RecipeBookGroupMixin {
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
                 String name = "P_CRAFTING_" + group.getIndex();
-                var group1 = Accessor.newGroup(name, last.ordinal() + 1, new ItemStack(group.getIcon().getItem()));
+                var group1 = Accessor.newGroup(name, last.ordinal() + 1, group.getIcon());
                 RecipeBookIsPainClient.ADDED_GROUPS.put(name, group1);
                 RecipeBookIsPainClient.AAAAAAAA.put(name, group);
                 groups.add(group1);
