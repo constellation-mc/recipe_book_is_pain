@@ -27,10 +27,10 @@ public class ClientRecipeBookMixin {
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
                 if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    if (RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()) != null)
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + group.getIndex()));
+                    if (RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(group) != null)
+                        cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(group));
                     else
-                        cir.setReturnValue(RecipeBookIsPainClient.ADDED_GROUPS.get("P_CRAFTING_" + ItemGroup.MISC.getIndex()));
+                        cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(ItemGroup.MISC));
             }
         }
     }

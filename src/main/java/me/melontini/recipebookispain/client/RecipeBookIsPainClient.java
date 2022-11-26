@@ -15,9 +15,8 @@ import java.util.Map;
 public class RecipeBookIsPainClient implements ClientModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger("RBIP");
-
-    public static Map<String, RecipeBookGroup> ADDED_GROUPS = new HashMap<>();
-    public static Map<String, ItemGroup> AAAAAAAA = new HashMap<>();
+    public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
+    public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
