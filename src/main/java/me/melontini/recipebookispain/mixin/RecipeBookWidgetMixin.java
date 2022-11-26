@@ -61,7 +61,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     @Shadow
     public abstract boolean isOpen();
 
-    @Inject(at = @At("RETURN"), method = "reset")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget;setToggled(Z)V", shift = At.Shift.BEFORE), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
         int a = (this.parentWidth - 147) / 2 - this.leftOffset;
         int s = (this.parentHeight + 166) / 2;
@@ -74,9 +74,21 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        updatePageSwitchButtons();
         renderPageText(matrices);
-        updatePages(mouseX, mouseY, matrices);
+        for (RecipeGroupButtonWidget widget : tabButtons) {
+            if (widget.visible) {
+                if (widget.getCategory().name().contains("_SEARCH")) {
+                    if (widget.isHovered())
+                        client.currentScreen.renderTooltip(matrices, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
+                } else {
+                    if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) != null) {
+                        Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
+                        if (text != null)
+                            if (widget.isHovered()) client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+                    }
+                }
+            }
+        }
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
     }
@@ -95,21 +107,15 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Unique //mmm spaghettio
-    private void updatePages(int mouseX, int mouseY, MatrixStack stack) {
+    private void updatePages() {
         for (RecipeGroupButtonWidget widget : tabButtons) {
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
                     widget.visible = true;
-                    if (widget.isHovered())
-                        client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
+                    widget.visible = true;
                     widget.checkForNewRecipes(this.client);
-                    if (RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()) != null) {
-                        Text text = RecipeBookIsPainClient.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
-                        if (text != null)
-                            if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
-                    }
                 }
             } else {
                 widget.visible = false;
@@ -122,10 +128,12 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         if (this.client.player != null) if (this.isOpen() && !this.client.player.isSpectator()) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page <= this.pages) ++this.page;
+                updatePages();
                 updatePageSwitchButtons();
                 cir.setReturnValue(true);
             } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page > 0) --this.page;
+                updatePages();
                 updatePageSwitchButtons();
                 cir.setReturnValue(true);
             }
@@ -178,7 +186,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
 
         --p;
         this.pages = (int) Math.ceil(p / 6);
-
+        updatePages();
+        updatePageSwitchButtons();
         ci.cancel();
     }
 

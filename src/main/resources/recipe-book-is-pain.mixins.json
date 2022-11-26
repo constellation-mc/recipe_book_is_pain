@@ -7,7 +7,6 @@
   "mixins": [
   ],
   "client": [
-    "Accessor",
     "ClientRecipeBookMixin",
     "MouseWheelieCompatMixin",
     "RecipeBookGroupMixin",
