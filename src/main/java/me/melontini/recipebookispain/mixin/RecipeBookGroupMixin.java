@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import org.objectweb.asm.Opcodes;
@@ -19,25 +20,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.melontini.recipebookispain.client.RecipeBookIsPainClient.CRAFTING_LIST;
+import static me.melontini.recipebookispain.client.RecipeBookIsPainClient.CRAFTING_SEARCH_LIST;
+
 @Mixin(RecipeBookGroup.class)
 @Unique
 public class RecipeBookGroupMixin {
-    //me when I can't use Fabric ASM
-
-    @Invoker("<init>")
-    static RecipeBookGroup newGroup(String internalName, int internalId, ItemStack... stacks) {
-        throw new AssertionError();
-    }
-
     @Shadow
     @Final
     @Mutable
     private static RecipeBookGroup[] field_1805;
 
-    @Unique
-    private static List<RecipeBookGroup> CRAFTING_SEARCH_LIST;
-    @Unique
-    private static List<RecipeBookGroup> CRAFTING_LIST;
+    @Invoker("<init>")
+    static RecipeBookGroup newGroup(String internalName, int internalId, ItemStack... stacks) {
+        throw new AssertionError();
+    }
 
     // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
     @SuppressWarnings("unchecked")
@@ -54,15 +51,13 @@ public class RecipeBookGroupMixin {
         var groups = new ArrayList<>(Arrays.asList(field_1805));
         var last = groups.get(groups.size() - 1);
 
-        CRAFTING_SEARCH_LIST = new ArrayList<>();
-        CRAFTING_LIST = new ArrayList<>();
+        for (ItemGroup group : ItemGroups.getGroups()) {
+            if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {
+                String name = "P_CRAFTING_" + ItemGroups.getGroups().indexOf(group);
 
-        for (ItemGroup itemGroup : ItemGroup.GROUPS) {
-            if (itemGroup != ItemGroup.HOTBAR && itemGroup != ItemGroup.INVENTORY && itemGroup != ItemGroup.SEARCH) {
-                String name = "P_CRAFTING_" + itemGroup.getIndex();
-                var recipeBookGroup = newGroup(name, last.ordinal() + 1, itemGroup.getIcon());
-                RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
-                RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(itemGroup, recipeBookGroup);
+                var recipeBookGroup = newGroup(name, last.ordinal() + 1, group.getIcon());
+                RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, group);
+                RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(group, recipeBookGroup);
 
                 CRAFTING_LIST.add(recipeBookGroup);
                 CRAFTING_SEARCH_LIST.add(recipeBookGroup);
@@ -71,6 +66,8 @@ public class RecipeBookGroupMixin {
             }
         }
         CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
+        CRAFTING_LIST.add(RecipeBookGroup.CRAFTING_MISC);
+        CRAFTING_SEARCH_LIST.add(RecipeBookGroup.CRAFTING_MISC);
 
         field_1805 = groups.toArray(RecipeBookGroup[]::new);
         RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
