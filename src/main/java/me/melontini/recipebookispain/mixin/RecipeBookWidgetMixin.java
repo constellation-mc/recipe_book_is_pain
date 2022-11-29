@@ -10,11 +10,9 @@ import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,8 +31,6 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     protected static Identifier TEXTURE;
     @Shadow
     protected MinecraftClient client;
-    @Shadow
-    protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
     @Unique
     private int page = 0;
     @Shadow
@@ -54,9 +50,6 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     private ToggleButtonWidget nextPageButton;
     @Unique
     private ToggleButtonWidget prevPageButton;
-    @Shadow
-    @Nullable
-    private RecipeGroupButtonWidget currentTab;
 
     @Shadow
     public abstract boolean isOpen();
@@ -79,7 +72,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
             if (widget.visible) {
                 if (widget.getCategory().name().contains("_SEARCH")) {
                     if (widget.isHovered())
-                        client.currentScreen.renderTooltip(matrices, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
+                        client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
                 } else {
                     if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) != null) {
                         Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
@@ -106,14 +99,16 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         }
     }
 
-    @Unique //mmm spaghettio
+    @Unique
     private void updatePages() {
         for (RecipeGroupButtonWidget widget : tabButtons) {
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
+                if (recipeBookGroup.name().contains("_SEARCH")) {
+                    //RecipeBookIsPainClient.LOGGER.info(widget.getCategory() + " is search");
                     widget.visible = true;
                 } else if (widget.hasKnownRecipes(recipeBook)) {
+                    //RecipeBookIsPainClient.LOGGER.info(widget.getCategory() + "has known recipes");
                     widget.visible = true;
                     widget.checkForNewRecipes(this.client);
                 }
@@ -156,27 +151,12 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         int b = (this.parentHeight - 166) / 2 + 3;
         int l = 0;
 
-        this.tabButtons.clear();
-        for (RecipeBookGroup group : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
-            var widget = new RecipeGroupButtonWidget(group);
-            if (group.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) this.tabButtons.add(widget);
-        }
-
-        if (this.currentTab != null) {
-            this.currentTab = this.tabButtons.stream().filter((button) ->
-                    button.getCategory().equals(this.currentTab.getCategory())).findFirst().orElse(null);
-        }
-        if (this.currentTab == null) {
-            this.currentTab = this.tabButtons.get(0);
-        }
-        this.currentTab.setToggled(true);
-
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
+            //RecipeBookIsPainClient.LOGGER.info(recipeBookGroup.name());
             if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
                 ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
                 widget.setPos(c, b + 27 * l++);
-                widget.visible = ((RecipeGroupButtonAccess) widget).getPage() == page;
                 if (l == 6) {
                     l = 0;
                 }
