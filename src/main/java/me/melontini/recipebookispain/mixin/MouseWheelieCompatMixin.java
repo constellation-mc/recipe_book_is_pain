@@ -33,6 +33,7 @@ public abstract class MouseWheelieCompatMixin {
         assert accessCT != null;
         if (access.getBookPage() != accessCT.getPage()) {
             access.setBookPage(accessCT.getPage());
+            access.updatePages();
         }
     }
 }
