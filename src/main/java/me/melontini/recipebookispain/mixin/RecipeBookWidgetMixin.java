@@ -100,15 +100,14 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Unique
-    private void updatePages() {
+    @Override
+    public void updatePages() {
         for (RecipeGroupButtonWidget widget : tabButtons) {
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
                 if (recipeBookGroup.name().contains("_SEARCH")) {
-                    //RecipeBookIsPainClient.LOGGER.info(widget.getCategory() + " is search");
                     widget.visible = true;
                 } else if (widget.hasKnownRecipes(recipeBook)) {
-                    //RecipeBookIsPainClient.LOGGER.info(widget.getCategory() + "has known recipes");
                     widget.visible = true;
                     widget.checkForNewRecipes(this.client);
                 }
@@ -153,7 +152,6 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
 
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
             RecipeBookGroup recipeBookGroup = widget.getCategory();
-            //RecipeBookIsPainClient.LOGGER.info(recipeBookGroup.name());
             if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
                 ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
                 widget.setPos(c, b + 27 * l++);

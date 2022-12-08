@@ -17,9 +17,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static me.melontini.recipebookispain.client.RecipeBookIsPainClient.CRAFTING_LIST;
+import static me.melontini.recipebookispain.client.RecipeBookIsPainClient.CRAFTING_SEARCH_LIST;
+
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void clinit(CallbackInfo ci) {
         ItemGroups.updateDisplayParameters(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true);
@@ -32,13 +34,35 @@ public class ClientRecipeBookMixin {
                 });
             }
         }
+
+        for (ItemGroup group : ItemGroups.getGroups()) {
+            if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {
+                String name = "P_CRAFTING_" + ItemGroups.getGroups().indexOf(group);
+
+                RecipeBookGroup recipeBookGroup = (RecipeBookGroup) RecipeBookGroup.CRAFTING_SEARCH.extend(name, new ItemStack[]{group.getIcon()});
+                RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, group);
+                RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(group, recipeBookGroup);
+
+                CRAFTING_LIST.add(recipeBookGroup);
+                CRAFTING_SEARCH_LIST.add(recipeBookGroup);
+            }
+        }
+        CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
+        CRAFTING_LIST.add(RecipeBookGroup.CRAFTING_MISC);
+        CRAFTING_SEARCH_LIST.add(RecipeBookGroup.CRAFTING_MISC);
+
+        RecipeBookGroup.SEARCH_MAP.computeIfPresent(RecipeBookGroup.CRAFTING_SEARCH, (recipeBookGroup, recipeBookGroups) -> {
+            recipeBookGroups.clear();
+            recipeBookGroups.addAll(CRAFTING_SEARCH_LIST);
+            return recipeBookGroups;
+        });
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         if (recipe instanceof CraftingRecipe) {
             ItemStack itemStack = recipe.getOutput();
-            ItemGroup group = ((ItemAccess)itemStack.getItem()).rbip$getPossibleGroup();
+            ItemGroup group = ((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup();
             if (group != null) {
                 if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {
                     if (RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(group) != null) {
