@@ -23,6 +23,9 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
+    maven {
+        url 'https://maven.wispforest.io'
+    }
 }
 
 dependencies {
@@ -31,7 +34,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation include('com.github.melontini:cracker-util:f6ee8a71e3')
+    modImplementation include("com.github.melontini:cracker-util:${project.cracker_util}")
+    modCompileOnly ("io.wispforest:owo-lib:${project.owo_version}") {
+        exclude (group: "net.fabricmc.fabric-api")
+    }
 
     modCompileOnly("maven.modrinth:mouse-wheelie:1.8.8+mc1.18-pre5")
 }

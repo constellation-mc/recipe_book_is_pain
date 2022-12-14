@@ -11,8 +11,10 @@ import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,6 +33,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     protected static Identifier TEXTURE;
     @Shadow
     protected MinecraftClient client;
+    @Shadow
+    protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
     @Unique
     private int page = 0;
     @Shadow
@@ -53,6 +57,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
 
     @Shadow
     public abstract boolean isOpen();
+
+    @Shadow private @Nullable RecipeGroupButtonWidget currentTab;
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget;setToggled(Z)V", shift = At.Shift.BEFORE), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
@@ -150,16 +156,28 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         int b = (this.parentHeight - 166) / 2 + 3;
         int l = 0;
 
-        for (RecipeGroupButtonWidget widget : this.tabButtons) {
-            RecipeBookGroup recipeBookGroup = widget.getCategory();
-            if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
-                ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
-                widget.setPos(c, b + 27 * l++);
-                if (l == 6) {
-                    l = 0;
-                }
-                p++;
+        this.tabButtons.clear();
+        for (RecipeBookGroup recipeBookGroup : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
+            var widget = new RecipeGroupButtonWidget(recipeBookGroup);
+            if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(this.recipeBook)) {
+                this.tabButtons.add(new RecipeGroupButtonWidget(recipeBookGroup));
             }
+        }
+        if (this.currentTab != null) {
+            this.currentTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.currentTab.getCategory())).findFirst().orElse(null);
+        }
+        if (this.currentTab == null) {
+            this.currentTab = this.tabButtons.get(0);
+        }
+
+        this.currentTab.setToggled(true);
+        for (RecipeGroupButtonWidget widget : this.tabButtons) {
+            ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
+            widget.setPos(c, b + 27 * l++);
+            if (l == 6) {
+                l = 0;
+            }
+            p++;
         }
 
         --p;
