@@ -1,3 +1,4 @@
+
 package me.melontini.recipebookispain.mixin;
 
 import me.melontini.crackerutil.interfaces.AnimatedItemGroup;
@@ -12,7 +13,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,21 +26,9 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget implemen
     private RecipeBookGroup category;
     @Shadow
     private float bounce;
-    @Unique
-    private int page = -1;
 
     public RecipeGroupButtonMixin(int x, int y, int width, int height, boolean toggled) {
         super(x, y, width, height, toggled);
-    }
-
-    @Override
-    public int getPage() {
-        return page;
-    }
-
-    @Override
-    public void setPage(int page) {
-        this.page = page;
     }
 
     @Inject(at = @At("HEAD"), method = "renderIcons", cancellable = true)

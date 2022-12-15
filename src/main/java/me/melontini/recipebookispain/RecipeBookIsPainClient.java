@@ -1,4 +1,4 @@
-package me.melontini.recipebookispain.client;
+package me.melontini.recipebookispain;
 
 
 import net.fabricmc.api.ClientModInitializer;
