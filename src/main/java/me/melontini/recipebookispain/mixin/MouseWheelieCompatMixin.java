@@ -2,8 +2,6 @@ package me.melontini.recipebookispain.mixin;
 
 import de.siphalor.mousewheelie.client.mixin.gui.other.MixinRecipeBookWidget;
 import de.siphalor.mousewheelie.client.util.ScrollAction;
-import me.melontini.recipebookispain.access.RecipeBookWidgetAccess;
-import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +25,11 @@ public abstract class MouseWheelieCompatMixin {
     @Dynamic(mixin = MixinRecipeBookWidget.class)
     @Inject(at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget.setToggled (Z)V", ordinal = 1, shift = At.Shift.AFTER), method = "mouseWheelie_scrollRecipeBook")
     private void inject(double mouseX, double mouseY, double scrollAmount, CallbackInfoReturnable<ScrollAction> cir) {
+        if (currentTab == null) return;//how tho?
+
         RecipeBookWidget bookWidget = (RecipeBookWidget) (Object) this;
-        RecipeBookWidgetAccess access = ((RecipeBookWidgetAccess) bookWidget);
-        RecipeGroupButtonAccess accessCT = ((RecipeGroupButtonAccess) this.currentTab);
-        assert accessCT != null;
-        if (access.getBookPage() != accessCT.getPage()) {
-            access.setBookPage(accessCT.getPage());
+        if (bookWidget.getPage() != currentTab.getPage()) {
+            bookWidget.setPage(currentTab.getPage());
         }
     }
 }
