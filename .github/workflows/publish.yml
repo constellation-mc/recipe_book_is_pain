@@ -23,17 +23,17 @@ jobs:
       - name: Publish Minecraft Mods
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          version-type: beta
-          modrinth-id: fLAsXzkA
+          version-type: alpha
+          modrinth-id: etNS9OnA
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
           modrinth-unfeature-mode: subset
           
-          curseforge-id: 825157
+          curseforge-id: 643246
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
             
           game-versions: |
-            1.19.2
+            1.19.3
           
           loaders: |
             forge
