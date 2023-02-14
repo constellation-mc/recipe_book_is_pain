@@ -10,7 +10,7 @@ import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -33,6 +33,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     protected static Identifier TEXTURE;
     @Shadow
     protected MinecraftClient client;
+    @Shadow
+    protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
     @Unique
     private int page = 0;
     @Shadow
@@ -56,11 +58,9 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     @Shadow
     public abstract boolean isOpen();
 
-    @Shadow protected AbstractRecipeScreenHandler<?> craftingScreenHandler;
+    @Shadow private @Nullable RecipeGroupButtonWidget currentTab;
 
-    @Shadow @Nullable private RecipeGroupButtonWidget currentTab;
-
-    @Inject(at = @At("RETURN"), method = "reset")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget;setToggled(Z)V", shift = At.Shift.BEFORE), method = "reset")
     private void recipe_book_is_pain$init(CallbackInfo ci) {
         int a = (this.parentWidth - 147) / 2 - this.leftOffset;
         int s = (this.parentHeight + 166) / 2;
@@ -73,9 +73,21 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
     private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        updatePageSwitchButtons();
         renderPageText(matrices);
-        updatePages(mouseX, mouseY, matrices);
+        for (RecipeGroupButtonWidget widget : tabButtons) {
+            if (widget.visible) {
+                if (widget.getCategory().name().contains("_SEARCH")) {
+                    if (widget.isHovered())
+                        client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
+                } else {
+                    if (RecipeBookIsPain.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) != null) {
+                        Text text = RecipeBookIsPain.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
+                        if (text != null)
+                            if (widget.isHovered()) client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+                    }
+                }
+            }
+        }
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
     }
@@ -93,22 +105,17 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         }
     }
 
-    @Unique //mmm spaghettio
-    private void updatePages(int mouseX, int mouseY, MatrixStack stack) {
+    @Unique
+    @Override
+    public void updatePages() {
         for (RecipeGroupButtonWidget widget : tabButtons) {
             if (((RecipeGroupButtonAccess) widget).getPage() == page) {
                 RecipeBookGroup recipeBookGroup = widget.getCategory();
-                if (client.currentScreen != null) if (recipeBookGroup.name().contains("_SEARCH")) {
+                if (recipeBookGroup.name().contains("_SEARCH")) {
                     widget.visible = true;
-                    if (widget.isHovered())
-                        client.currentScreen.renderTooltip(stack, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else if (widget.hasKnownRecipes(recipeBook)) {
+                    widget.visible = true;
                     widget.checkForNewRecipes(this.client);
-                    if (RecipeBookIsPain.AAAAAAAA.get(recipeBookGroup.name()) != null) {
-                        Text text = RecipeBookIsPain.AAAAAAAA.get(recipeBookGroup.name()).getDisplayName();
-                        if (text != null)
-                            if (widget.isHovered()) client.currentScreen.renderTooltip(stack, text, mouseX, mouseY);
-                    }
                 }
             } else {
                 widget.visible = false;
@@ -121,10 +128,12 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         if (this.client.player != null) if (this.isOpen() && !this.client.player.isSpectator()) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page <= this.pages) ++this.page;
+                updatePages();
                 updatePageSwitchButtons();
                 cir.setReturnValue(true);
             } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page > 0) --this.page;
+                updatePages();
                 updatePageSwitchButtons();
                 cir.setReturnValue(true);
             }
@@ -148,36 +157,33 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         int l = 0;
 
         this.tabButtons.clear();
-        for (RecipeBookGroup group : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
-            var widget = new RecipeGroupButtonWidget(group);
-            if (group.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) this.tabButtons.add(widget);
+        for (RecipeBookGroup recipeBookGroup : RecipeBookGroup.getGroups(this.craftingScreenHandler.getCategory())) {
+            var widget = new RecipeGroupButtonWidget(recipeBookGroup);
+            if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(this.recipeBook)) {
+                this.tabButtons.add(new RecipeGroupButtonWidget(recipeBookGroup));
+            }
         }
-
         if (this.currentTab != null) {
-            this.currentTab = this.tabButtons.stream().filter((button) ->
-                    button.getCategory().equals(this.currentTab.getCategory())).findFirst().orElse(null);
+            this.currentTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.currentTab.getCategory())).findFirst().orElse(null);
         }
         if (this.currentTab == null) {
             this.currentTab = this.tabButtons.get(0);
         }
-        this.currentTab.setToggled(true);
 
+        this.currentTab.setToggled(true);
         for (RecipeGroupButtonWidget widget : this.tabButtons) {
-            RecipeBookGroup recipeBookGroup = widget.getCategory();
-            if (recipeBookGroup.name().contains("_SEARCH") || widget.hasKnownRecipes(recipeBook)) {
-                ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
-                widget.setPos(c, b + 27 * l++);
-                widget.visible = ((RecipeGroupButtonAccess) widget).getPage() == page;
-                if (l == 6) {
-                    l = 0;
-                }
-                p++;
+            ((RecipeGroupButtonAccess) widget).setPage((int) Math.ceil(p / 6));
+            widget.setPos(c, b + 27 * l++);
+            if (l == 6) {
+                l = 0;
             }
+            p++;
         }
 
         --p;
         this.pages = (int) Math.ceil(p / 6);
-
+        updatePages();
+        updatePageSwitchButtons();
         ci.cancel();
     }
 

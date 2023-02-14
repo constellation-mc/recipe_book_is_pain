@@ -2,6 +2,7 @@ package me.melontini.recipebookispain;
 
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
@@ -18,40 +19,33 @@ import java.util.Map;
 public class RecipeBookIsPain {
 
     public static final Logger LOGGER = LogManager.getLogger("RBIP");
-    public static Map<String, RecipeBookGroup> ADDED_GROUPS = new HashMap<>();
-    public static Map<String, ItemGroup> AAAAAAAA = new HashMap<>();
 
-    public static List<RecipeBookGroup> CRAFTING_SEARCH_MAP = new ArrayList<>();
-    public static List<RecipeBookGroup> CRAFTING_MAP = new ArrayList<>();
+    public static List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
+    public static List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
+
+    public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
+    public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
 
     public RecipeBookIsPain() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOWEST, false, RegisterRecipeBookCategoriesEvent.class, registerRecipeBookCategoriesEvent -> {
-            List<RecipeBookGroup> groups = new ArrayList<>();
+            for (ItemGroup group : ItemGroups.getGroups()) {
+                if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {
+                    String name = "P_CRAFTING_" + ItemGroups.getGroups().indexOf(group);
 
-            for (ItemGroup group : ItemGroup.GROUPS) {
-                if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
-                    String name = "P_CRAFTING_" + group.getIndex();
-                    var group1 = RecipeBookGroup.create(name, group.getIcon());
-                    RecipeBookIsPain.ADDED_GROUPS.put(name, group1);
-                    RecipeBookIsPain.AAAAAAAA.put(name, group);
-                    groups.add(group1);
+                    RecipeBookGroup recipeBookGroup = RecipeBookGroup.create(name, group.getIcon());
+                    RecipeBookIsPain.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, group);
+                    RecipeBookIsPain.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(group, recipeBookGroup);
+
+                    CRAFTING_LIST.add(recipeBookGroup);
+                    CRAFTING_SEARCH_LIST.add(recipeBookGroup);
                 }
             }
-
-            List<RecipeBookGroup> craftingMap = new ArrayList<>();
-            List<RecipeBookGroup> craftingSearchMap = new ArrayList<>();
-            craftingMap.add(RecipeBookGroup.CRAFTING_SEARCH);
-            for (RecipeBookGroup bookGroup : groups) {
-                if (bookGroup.toString().contains("P_CRAFTING")) {
-                    craftingMap.add(bookGroup);
-                    craftingSearchMap.add(bookGroup);
-                }
-            }
-            RecipeBookIsPain.CRAFTING_SEARCH_MAP.addAll(craftingSearchMap);
-            CRAFTING_MAP.addAll(craftingMap);
+            CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
+            CRAFTING_LIST.add(RecipeBookGroup.CRAFTING_MISC);
+            CRAFTING_SEARCH_LIST.add(RecipeBookGroup.CRAFTING_MISC);
 
             registerRecipeBookCategoriesEvent.aggregateCategories.remove(RecipeBookGroup.CRAFTING_SEARCH);
-            registerRecipeBookCategoriesEvent.registerAggregateCategory(RecipeBookGroup.CRAFTING_SEARCH, CRAFTING_SEARCH_MAP);
+            registerRecipeBookCategoriesEvent.registerAggregateCategory(RecipeBookGroup.CRAFTING_SEARCH, CRAFTING_SEARCH_LIST);
             RecipeBookIsPain.LOGGER.info("[RBIP] recipe book init complete");
         });
     }
