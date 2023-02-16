@@ -1,6 +1,7 @@
 package me.melontini.recipebookispain;
 
 
+import io.wispforest.owo.itemgroup.OwoItemGroup;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,15 +27,13 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
     public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
     public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
 
-    public static boolean rbip$renderOwo(MatrixStack matrices, int i, RecipeGroupButtonWidget widget) {
-        if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.containsKey(widget.getCategory())) {
-            if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) instanceof io.wispforest.owo.itemgroup.OwoItemGroup owoItemGroup) {
-                MinecraftClient client = MinecraftClient.getInstance();
-                double e = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
-                double f = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
-                owoItemGroup.icon().render(matrices, widget.getX() + 9 + i, widget.getY() + 5, (int) e, (int) f, client.getTickDelta());
-                return true;
-            }
+    public static boolean rbip$renderOwo(MatrixStack matrices, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
+        if (group instanceof OwoItemGroup owoItemGroup) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            double e = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
+            double f = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
+            owoItemGroup.icon().render(matrices, widget.getX() + 9 + i, widget.getY() + 5, (int) e, (int) f, client.getTickDelta());
+            return true;
         }
         return false;
     }

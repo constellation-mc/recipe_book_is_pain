@@ -10,7 +10,8 @@
     "ClientRecipeBookMixin",
     "ItemMixin",
     "MouseWheelieCompatMixin",
-    "RecipeBookWidgetMixin"
+    "RecipeBookWidgetMixin",
+    "RecipeGroupButtonMixin"
   ],
   "injectors": {
     "defaultRequire": 1
