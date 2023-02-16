@@ -23,7 +23,7 @@ jobs:
       - name: Publish Minecraft Mods
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          version-type: alpha
+          version-type: beta
           modrinth-id: etNS9OnA
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true

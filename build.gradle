@@ -37,6 +37,10 @@ dependencies {
     modCompileOnly("maven.modrinth:mouse-wheelie:1.8.8+mc1.18-pre5")
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/rbip.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
     filteringCharset "UTF-8"

@@ -13,9 +13,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "me.melontini.recipebookispain.RecipeBookIsPain"
+      "me.melontini.recipebookispain.RecipeBookIsPainClient"
     ]
   },
+  "accessWidener": "rbip.accesswidener",
   "mixins": [
     "recipe-book-is-pain.mixins.json"
   ],
