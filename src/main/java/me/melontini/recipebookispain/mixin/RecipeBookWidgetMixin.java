@@ -62,7 +62,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     public abstract boolean isOpen();
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeGroupButtonWidget;setToggled(Z)V", shift = At.Shift.BEFORE), method = "reset")
-    private void cracker_util$reset(CallbackInfo ci) {
+    private void rbip$reset(CallbackInfo ci) {
         int a = (this.parentWidth - 147) / 2 - this.leftOffset;
         int s = (this.parentHeight + 166) / 2;
         this.nextPageButton = new ToggleButtonWidget(a + 14, s, 12, 17, false);
@@ -73,8 +73,8 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
-    private void cracker_util$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        cracker_util$renderPageText(matrices);
+    private void rbip$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        rbip$renderPageText(matrices);
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
 
@@ -95,7 +95,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Unique
-    private void cracker_util$renderPageText(MatrixStack matrices) {
+    private void rbip$renderPageText(MatrixStack matrices) {
         int x = (this.parentWidth - 135) / 2 - this.leftOffset - 30;
         int y = (this.parentHeight + 169) / 2 + 3;
         int displayPage = this.page + 1;
@@ -126,7 +126,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Inject(at = @At("HEAD"), method = "mouseClicked", cancellable = true)
-    private void cracker_util$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    private void rbip$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (this.client.player != null) if (this.isOpen() && !this.client.player.isSpectator()) {
             if (this.nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (this.page < (this.pages - 1)) setPage(++this.page);
@@ -146,7 +146,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Inject(at = @At("HEAD"), method = "refreshTabButtons", cancellable = true)
-    private void cracker_util$refresh(CallbackInfo ci) {
+    private void rbip$refresh(CallbackInfo ci) {
         this.pages = 0;
         int wc = 0;
         int x = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
