@@ -1,4 +1,4 @@
-package me.melontini.recipebookispain.client;
+package me.melontini.recipebookispain;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -20,6 +20,5 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        //null pointers are epic
     }
 }

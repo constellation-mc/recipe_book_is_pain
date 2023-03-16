@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
-import me.melontini.recipebookispain.client.RecipeBookIsPainClient;
+import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -26,12 +26,14 @@ public class ClientRecipeBookMixin {
             ItemStack itemStack = recipe.getOutput();
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
-                if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
-                    if (RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(group) != null)
+                if (group != ItemGroup.HOTBAR && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH) {
+                    if (RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.containsKey(group)) {
                         cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(group));
-                    else
-                        cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(ItemGroup.MISC));
+                        return;
+                    }
+                }
             }
+            cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(ItemGroup.MISC));
         }
     }
 }

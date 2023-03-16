@@ -1,7 +1,11 @@
 package me.melontini.recipebookispain.access;
 
 public interface RecipeGroupButtonAccess {
-    int getPage();
+    default int getPage() {
+        throw new IllegalStateException("Interface not implemented");
+    }
 
-    void setPage(int page);
+    default void setPage(int page) {
+        throw new IllegalStateException("Interface not implemented");
+    }
 }
