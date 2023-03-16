@@ -42,7 +42,7 @@ public class RecipeBookGroupMixin {
     // pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work pls work
     @SuppressWarnings("unchecked")
     @Redirect(at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableList;of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;"), remap = false, method = "<clinit>")
-    private static <E> ImmutableList<E> listOf(E e1, E e2, E e3, E e4) {
+    private static <E> ImmutableList<E> rbip$listOf(E e1, E e2, E e3, E e4) {
         if (e1 == RecipeBookGroup.CRAFTING_EQUIPMENT) {
             return (ImmutableList<E>) ImmutableList.copyOf(CRAFTING_SEARCH_LIST);
         }
@@ -50,7 +50,7 @@ public class RecipeBookGroupMixin {
     }
 
     @Inject(at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER), method = "<clinit>")
-    private static void recipe_book_is_pain$addCustomGroups(CallbackInfo ci) {
+    private static void rbip$addCustomGroups(CallbackInfo ci) {
         var groups = new ArrayList<>(Arrays.asList(field_1805));
         var last = groups.get(groups.size() - 1);
 
@@ -76,7 +76,7 @@ public class RecipeBookGroupMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)
-    private static void recipe_book_is_pain$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
+    private static void rbip$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
         if (category == RecipeBookCategory.CRAFTING) cir.setReturnValue(CRAFTING_LIST);
     }
 }
