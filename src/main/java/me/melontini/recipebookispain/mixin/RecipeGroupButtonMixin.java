@@ -52,7 +52,7 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
             }
         }
         if (group.shouldAnimateIcon()) {
-            group.getIconAnimation().animateIcon(matrices, this.getX() + 9 + i, this.getY() + 5);
+            group.getIconAnimation().animateIcon(matrices, this.getX() + 9 + i, this.getY() + 5, this.toggled, false);
             ci.cancel();
         }
     }
