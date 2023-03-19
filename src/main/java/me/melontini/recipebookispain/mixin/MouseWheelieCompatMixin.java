@@ -33,8 +33,6 @@ public abstract class MouseWheelieCompatMixin {
         RecipeBookWidget bookWidget = (RecipeBookWidget) (Object) this;
         if (bookWidget.getPage() != currentTab.getPage()) {
             bookWidget.setPage(currentTab.getPage());
-            bookWidget.updatePages();
-            bookWidget.updatePageSwitchButtons();
         }
     }
 }
