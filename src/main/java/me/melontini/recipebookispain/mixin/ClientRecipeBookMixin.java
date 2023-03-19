@@ -1,6 +1,7 @@
 package me.melontini.recipebookispain.mixin;
 
 import me.melontini.crackerutil.CrackerLog;
+import me.melontini.crackerutil.util.EnumWrapper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
@@ -22,14 +23,14 @@ import java.util.List;
 public class ClientRecipeBookMixin {
 
     @Inject(at = @At("HEAD"), method = "<clinit>")
-    private static void recipe_book_is_pain$clinit(CallbackInfo ci) {
+    private static void rbip$clinit(CallbackInfo ci) {
         List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
         List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
 
         Arrays.stream(ItemGroup.GROUPS).filter(itemGroup -> itemGroup != ItemGroup.HOTBAR && itemGroup != ItemGroup.INVENTORY && itemGroup != ItemGroup.SEARCH)
                 .forEach(itemGroup -> {
                     String name = "P_CRAFTING_" + itemGroup.getIndex();
-                    RecipeBookGroup recipeBookGroup = (RecipeBookGroup) RecipeBookGroup.CRAFTING_SEARCH.extend(name, (Object[]) new ItemStack[]{itemGroup.getIcon()});
+                    RecipeBookGroup recipeBookGroup = EnumWrapper.RecipeBookGroup.extend(name, itemGroup.getIcon());
                     RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
                     RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(itemGroup, recipeBookGroup);
 
@@ -46,7 +47,7 @@ public class ClientRecipeBookMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
-    private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
+    private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         RecipeType<?> recipeType = recipe.getType();
         if (recipeType == RecipeType.CRAFTING) {
             ItemStack itemStack = recipe.getOutput();
