@@ -2,6 +2,5 @@
 
 ### What's new:
 
-* Fixed pages not changing when scrolling with Mouse Wheelie 
-
-> Compatible with m-tweaks =>0.4.5-1.19.2.
+* Fixed crash with Tom's Simple Storage
+* Updated CrackerUtil
