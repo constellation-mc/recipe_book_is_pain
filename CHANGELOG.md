@@ -1,7 +1,6 @@
-## 0.8.1-1.19.3
+## 0.8.1-1.19.2
 
 ### What's new:
 
-* Switched to CrackerUtil
-
-### Likely maybe mostly stable.
+* Fixed crash with Tom's Simple Storage
+* Updated CrackerUtil
