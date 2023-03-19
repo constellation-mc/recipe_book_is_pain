@@ -1,6 +1,7 @@
 package me.melontini.recipebookispain.mixin;
 
 import me.melontini.crackerutil.CrackerLog;
+import me.melontini.crackerutil.util.EnumWrapper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import me.melontini.recipebookispain.access.ItemAccess;
 import net.minecraft.client.recipebook.ClientRecipeBook;
@@ -59,7 +60,7 @@ public class ClientRecipeBookMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
-    private static void recipe_book_is_pain$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
+    private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         if (recipe instanceof CraftingRecipe) {
             ItemStack itemStack = recipe.getOutput();
             ItemGroup group = ((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup();

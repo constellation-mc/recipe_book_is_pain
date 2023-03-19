@@ -25,7 +25,7 @@ public abstract class RecipeBookWidgetMixin {
     private List<RecipeGroupButtonWidget> tabButtons;
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
-    private void recipe_book_is_pain$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void rbip$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (client.currentScreen != null) {
             this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
                 if (widget.getCategory().name().contains("_SEARCH")) {
