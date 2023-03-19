@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_LIST;
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_SEARCH_LIST;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
@@ -36,18 +36,20 @@ public class ClientRecipeBookMixin {
                     }
                 }));
 
+        List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
+        List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
+
         ItemGroups.getGroups().stream().filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> {
                     String name = "P_CRAFTING_" + ItemGroups.getGroups().indexOf(group);
 
-                    RecipeBookGroup recipeBookGroup = (RecipeBookGroup) RecipeBookGroup.CRAFTING_SEARCH.extend(name, (Object[]) new ItemStack[]{group.getIcon()});
+                    RecipeBookGroup recipeBookGroup = EnumWrapper.RecipeBookGroup.extend(name, group.getIcon());
                     RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, group);
                     RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(group, recipeBookGroup);
 
                     CRAFTING_LIST.add(recipeBookGroup);
                     CRAFTING_SEARCH_LIST.add(recipeBookGroup);
                 });
-
         CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
         CRAFTING_LIST.add(RecipeBookGroup.CRAFTING_MISC);
         CRAFTING_SEARCH_LIST.add(RecipeBookGroup.CRAFTING_MISC);
