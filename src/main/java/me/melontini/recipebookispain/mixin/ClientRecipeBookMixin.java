@@ -10,15 +10,15 @@ import net.minecraft.recipe.RecipeType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-    static {
-        //noinspection ResultOfMethodCallIgnored
+    @Inject(at = @At("HEAD"), method = "<clinit>")
+    private static void rbip$clinit(CallbackInfo ci) {
         RecipeBookGroup.values();
     }
-
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         RecipeType<?> recipeType = recipe.getType();
