@@ -170,7 +170,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
             wc++;
         }
 
-        this.pages = MathHelper.ceil(wc / 6f);
+        this.pages = (int) Math.ceil(wc / 6f);
         updatePages();
         updatePageSwitchButtons();
         ci.cancel();

@@ -6,6 +6,7 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import org.apache.commons.lang3.ArrayUtils;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -51,28 +52,28 @@ public class RecipeBookGroupMixin {
 
     @Inject(at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lnet/minecraft/client/recipebook/RecipeBookGroup;field_1805:[Lnet/minecraft/client/recipebook/RecipeBookGroup;", shift = At.Shift.AFTER), method = "<clinit>")
     private static void rbip$addCustomGroups(CallbackInfo ci) {
-        var groups = new ArrayList<>(Arrays.asList(field_1805));
-        var last = groups.get(groups.size() - 1);
-
         CRAFTING_SEARCH_LIST = new ArrayList<>();
         CRAFTING_LIST = new ArrayList<>();
 
         Arrays.stream(ItemGroup.GROUPS).filter(itemGroup -> itemGroup != ItemGroup.HOTBAR && itemGroup != ItemGroup.INVENTORY && itemGroup != ItemGroup.SEARCH)
                 .forEach(itemGroup -> {
                     String name = "P_CRAFTING_" + itemGroup.getIndex();
-                    var recipeBookGroup = newGroup(name, last.ordinal() + 1, itemGroup.getIcon());
+                    var recipeBookGroup = rbip$extend(name, itemGroup.getIcon());
                     RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
                     RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(itemGroup, recipeBookGroup);
 
                     CRAFTING_LIST.add(recipeBookGroup);
                     CRAFTING_SEARCH_LIST.add(recipeBookGroup);
-
-                    groups.add(recipeBookGroup);
                 });
         CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
-
-        field_1805 = groups.toArray(RecipeBookGroup[]::new);
         RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
+    }
+
+    private static RecipeBookGroup rbip$extend(String internalName, ItemStack... stacks) {
+        RecipeBookGroup last = field_1805[field_1805.length - 1];
+        RecipeBookGroup enumConst = newGroup(internalName, last.ordinal() + 1, stacks);
+        field_1805 = ArrayUtils.add(field_1805, enumConst);
+        return enumConst;
     }
 
     @Inject(at = @At("HEAD"), method = "getGroups", cancellable = true)

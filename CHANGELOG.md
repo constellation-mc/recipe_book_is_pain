@@ -1,7 +1,10 @@
-## 0.8.0-1.18
+## 0.8.1-1.18
 
 ### What's new:
 
-* mostly internal changes.
+* Fixed RBIP's enum values having identical indexes. pretty epic.
+* New icon.
+* Updated GitHub CI.
+* Removed `static` from ClientRecipeBookMixin.
 
 Supports: Minecraft 1.18, 1.18.1, 1.18.2, 1.19, 1.19.1, 1.19.2
