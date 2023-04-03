@@ -104,7 +104,7 @@ jar {
 
 tasks.register('printVersionName') {
     doLast {
-        println "[FORGE] " + version.split("-")[0] + version.split("-")[1]
+        println "[FORGE] ${version.split("-")[0]} (${version.split("-")[1]})"
     }
 }
 
