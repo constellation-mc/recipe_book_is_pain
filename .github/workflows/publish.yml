@@ -33,7 +33,7 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
             
           game-versions: |
-            1.19.3
+            1.19.4
           
           loaders: |
             fabric

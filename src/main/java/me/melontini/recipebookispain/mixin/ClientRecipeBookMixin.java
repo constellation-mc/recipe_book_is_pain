@@ -4,6 +4,7 @@ import me.melontini.crackerutil.CrackerLog;
 import me.melontini.crackerutil.util.EnumWrapper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import me.melontini.recipebookispain.access.ItemAccess;
+import net.minecraft.client.network.ClientDynamicRegistryType;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.CombinedDynamicRegistries;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,10 +26,10 @@ import java.util.List;
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
+    private static final CombinedDynamicRegistries<ClientDynamicRegistryType> RBIP$THANKS = ClientDynamicRegistryType.createCombinedDynamicRegistries();
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void rbip$setupGroups(CallbackInfo ci) {
-        long i = System.currentTimeMillis();
-        ItemGroups.updateDisplayParameters(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true);
+        ItemGroups.updateDisplayContext(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true, RBIP$THANKS.getCombinedRegistryManager());
 
         ItemGroups.getGroups().stream().filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> group.getSearchTabStacks().forEach(stack -> {
@@ -58,13 +60,12 @@ public class ClientRecipeBookMixin {
         RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).addAll(CRAFTING_SEARCH_LIST);
         RecipeBookGroup.CRAFTING.clear();
         RecipeBookGroup.CRAFTING.addAll(CRAFTING_LIST);
-        CrackerLog.info("done preparing recipe book groups in {} ms", System.currentTimeMillis() - i);
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         if (recipe instanceof CraftingRecipe) {
-            ItemStack itemStack = recipe.getOutput();
+            ItemStack itemStack = recipe.getOutput(RBIP$THANKS.getCombinedRegistryManager());
             ItemGroup group = ((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup();
             if (group != null) {
                 if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {

@@ -1,6 +1,4 @@
-## 0.9.0-1.19.3
-
 ### What's new:
 
-* Fixed crash with Tom's Simple Storage
+* Updated to 1.19.4
 * Updated CrackerUtil
