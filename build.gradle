@@ -29,12 +29,14 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation include("com.github.melontini:cracker-util:${project.cracker_util}")
+    modCompileOnly("maven.modrinth:mouse-wheelie:1.8.8+mc1.18-pre5")
     modCompileOnly ("io.wispforest:owo-lib:${project.owo_version}") {
         exclude (group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnly("maven.modrinth:mouse-wheelie:1.8.8+mc1.18-pre5")
+    modImplementation include("me.melontini.cracker-util:cracker-util-base:${project.cracker_util}")
+    modImplementation include("me.melontini.cracker-util:cracker-util-recipe-book:${project.cracker_util}")
+    modImplementation include("me.melontini.cracker-util:cracker-util-enums:${project.cracker_util}")
 }
 
 loom {
