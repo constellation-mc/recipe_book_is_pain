@@ -27,7 +27,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modCompileOnly("maven.modrinth:mouse-wheelie:1.8.8+mc1.18-pre5")
-    modImplementation include("com.github.melontini:cracker-util:${project.cracker_util}")
+
+    modImplementation include("me.melontini.cracker-util:cracker-util-base:${project.cracker_util}")
+    modImplementation include("me.melontini.cracker-util:cracker-util-recipe-book:${project.cracker_util}")
+    modImplementation include("me.melontini.cracker-util:cracker-util-enums:${project.cracker_util}")
 }
 
 processResources {
