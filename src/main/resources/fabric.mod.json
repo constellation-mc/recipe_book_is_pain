@@ -16,7 +16,6 @@
       "me.melontini.recipebookispain.RecipeBookIsPainClient"
     ]
   },
-  "accessWidener": "rbip.accesswidener",
   "mixins": [
     "recipe-book-is-pain.mixins.json"
   ],

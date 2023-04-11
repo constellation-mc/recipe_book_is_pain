@@ -29,7 +29,7 @@ public abstract class RecipeBookWidgetMixin {
         if (client.currentScreen != null) {
             this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
                 if (widget.getCategory().name().contains("_SEARCH")) {
-                    client.currentScreen.renderTooltip(matrices, ItemGroups.SEARCH.getDisplayName(), mouseX, mouseY);
+                    client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
                 } else {
                     if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) != null) {
                         Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();

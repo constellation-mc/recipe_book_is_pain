@@ -26,7 +26,6 @@ import java.util.List;
 public class ClientRecipeBookMixin {
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void rbip$setupGroups(CallbackInfo ci) {
-        long i = System.currentTimeMillis();
         ItemGroups.updateDisplayParameters(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true);
 
         ItemGroups.getGroups().stream().filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
@@ -58,7 +57,7 @@ public class ClientRecipeBookMixin {
         RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).addAll(CRAFTING_SEARCH_LIST);
         RecipeBookGroup.CRAFTING.clear();
         RecipeBookGroup.CRAFTING.addAll(CRAFTING_LIST);
-        CrackerLog.info("done preparing recipe book groups in {} ms", System.currentTimeMillis() - i);
+        CrackerLog.info("done preparing recipe book groups");
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
