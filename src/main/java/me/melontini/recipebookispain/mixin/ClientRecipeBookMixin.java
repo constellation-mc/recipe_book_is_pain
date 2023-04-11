@@ -60,6 +60,7 @@ public class ClientRecipeBookMixin {
         RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).addAll(CRAFTING_SEARCH_LIST);
         RecipeBookGroup.CRAFTING.clear();
         RecipeBookGroup.CRAFTING.addAll(CRAFTING_LIST);
+        CrackerLog.info("done preparing recipe book groups");
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)

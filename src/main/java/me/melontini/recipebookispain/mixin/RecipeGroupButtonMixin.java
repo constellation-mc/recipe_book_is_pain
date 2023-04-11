@@ -1,7 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.RecipeBookGroup;
@@ -16,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static me.melontini.recipebookispain.RecipeBookIsPainClient.rbip$renderOwo;
+import static me.melontini.recipebookispain.RecipeBookIsPainClient.renderCracker;
 
 @Mixin(RecipeGroupButtonWidget.class)
 public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
-    private static final boolean isOwOLoaded = FabricLoader.getInstance().isModLoaded("owo");
     @Shadow
     @Final
     private RecipeBookGroup category;
@@ -35,15 +34,16 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
 
         int i = this.toggled ? -2 : 0;
 
-        if (isOwOLoaded) {
+        if (RecipeBookIsPainClient.isOwOLoaded) {
             if (rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }
         }
-        if (group.shouldAnimateIcon()) {
-            group.getIconAnimation().animateIcon(matrices, this.getX() + 9 + i, this.getY() + 5, this.toggled, false);
-            ci.cancel();
+        if (RecipeBookIsPainClient.isCrackerContentLoaded) {
+            if (renderCracker(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+                ci.cancel();
+            }
         }
     }
 }
