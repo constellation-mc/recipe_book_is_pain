@@ -37,10 +37,7 @@ dependencies {
     modImplementation include("me.melontini.cracker-util:cracker-util-base:${project.cracker_util}")
     modImplementation include("me.melontini.cracker-util:cracker-util-recipe-book:${project.cracker_util}")
     modImplementation include("me.melontini.cracker-util:cracker-util-enums:${project.cracker_util}")
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/rbip.accesswidener")
+    modImplementation ("me.melontini.cracker-util:cracker-util-content:${project.cracker_util}") //only for icon group compat
 }
 
 processResources {
