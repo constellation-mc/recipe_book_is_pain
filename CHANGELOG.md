@@ -1,5 +1,3 @@
-## 0.8.1-1.18
-
 ### What's new:
 
 * Added compat with `cracker-util-recipe-book`
