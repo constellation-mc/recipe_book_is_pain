@@ -1,8 +1,7 @@
-package me.melontini.recipebookispain.mixin;
+package me.melontini.recipebookispain.mixin.widget;
 
 import me.melontini.recipebookispain.access.RecipeBookWidgetAccess;
 import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
-import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
@@ -10,9 +9,7 @@ import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -77,21 +74,6 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         rbip$renderPageText(matrices);
         this.prevPageButton.render(matrices, mouseX, mouseY, delta);
         this.nextPageButton.render(matrices, mouseX, mouseY, delta);
-
-        if (client.currentScreen != null) {
-            this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
-                if (widget.getCategory().name().contains("_SEARCH")) {
-                    client.currentScreen.renderTooltip(matrices, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
-                } else {
-                    if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.containsKey(widget.getCategory())) {
-                        Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
-                        if (text != null) {
-                            client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
-                        }
-                    }
-                }
-            });
-        }
     }
 
     @Unique

@@ -7,12 +7,18 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class RecipeBookIsPainClient implements ClientModInitializer {
+    @Unique
+    public static List<RecipeBookGroup> CRAFTING_SEARCH_LIST;
+    @Unique
+    public static List<RecipeBookGroup> CRAFTING_LIST;
 
     public static final Logger LOGGER = LogManager.getLogger("RBIP");
     public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
