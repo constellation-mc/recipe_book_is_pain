@@ -55,5 +55,9 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
                 ci.cancel();
             }
         }
+
+        if (this.bounce > 0.0F) {
+            matrices.pop();
+        }
     }
 }
