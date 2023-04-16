@@ -1,6 +1,5 @@
 package me.melontini.recipebookispain.mixin;
 
-import me.melontini.crackerutil.CrackerLog;
 import me.melontini.crackerutil.util.EnumWrapper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
@@ -43,7 +42,7 @@ public class ClientRecipeBookMixin {
         RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).addAll(CRAFTING_SEARCH_LIST);
         RecipeBookGroup.CRAFTING.clear();
         RecipeBookGroup.CRAFTING.addAll(CRAFTING_LIST);
-        CrackerLog.info("Finished setting up recipe book groups!");
+        RecipeBookIsPainClient.LOGGER.info("[RBIP] Finished setting up recipe book groups!");
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
