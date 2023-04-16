@@ -34,7 +34,7 @@ jobs:
           version: ${{ env.VERSION_PLAIN }}
 
           game-versions: |
-            1.19.4
+            1.19.3
 
           loaders: |
             fabric
