@@ -2,6 +2,7 @@ package me.melontini.recipebookispain;
 
 
 import io.wispforest.owo.itemgroup.OwoItemGroup;
+import me.melontini.crackerutil.util.PrependingLogger;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +13,6 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class RecipeBookIsPainClient implements ClientModInitializer {
     public static final boolean isOwOLoaded = FabricLoader.getInstance().isModLoaded("owo");
     public static final boolean isCrackerContentLoaded = FabricLoader.getInstance().isModLoaded("cracker-util-content");
-    public static final Logger LOGGER = LogManager.getLogger("RBIP");
+    public static final PrependingLogger LOGGER = new PrependingLogger(LogManager.getLogger("RBIP"), PrependingLogger.LOGGER_NAME);
     public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
     public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
 
