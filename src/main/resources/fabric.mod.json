@@ -13,10 +13,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "me.melontini.recipebookispain.client.RecipeBookIsPainClient"
-    ],
-    "main": [
-      "me.melontini.recipebookispain.RecipeBookIsPain"
+      "me.melontini.recipebookispain.RecipeBookIsPainClient"
     ]
   },
   "mixins": [

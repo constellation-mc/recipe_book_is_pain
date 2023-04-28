@@ -1,4 +1,4 @@
-package me.melontini.recipebookispain.mixin;
+package me.melontini.recipebookispain.mixin.widget;
 
 import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;

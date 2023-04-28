@@ -7,12 +7,14 @@
   "mixins": [
   ],
   "client": [
-    "Accessor",
-    "ClientRecipeBookMixin",
     "MouseWheelieCompatMixin",
-    "RecipeBookGroupMixin",
-    "RecipeBookWidgetMixin",
-    "RecipeGroupButtonMixin"
+    "cracker_compat.RecipeBookWidgetMixin",
+    "cracker_compat.RecipeGroupButtonMixin",
+    "groups.ClientRecipeBookMixin",
+    "groups.RecipeBookGroupMixin",
+    "widget.RecipeBookTooltipMixin",
+    "widget.RecipeBookWidgetMixin",
+    "widget.RecipeGroupButtonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

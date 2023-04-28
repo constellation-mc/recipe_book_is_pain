@@ -1,7 +1,23 @@
 package me.melontini.recipebookispain.access;
 
 public interface RecipeBookWidgetAccess {
-    int getBookPage();
+    default void updatePages() {
+        throw new IllegalStateException("Interface not implemented");
+    }
 
-    void setBookPage(int page);
+    default void updatePageSwitchButtons() {
+        throw new IllegalStateException("Interface not implemented");
+    }
+
+    default int getPage() {
+        throw new IllegalStateException("Interface not implemented");
+    }
+
+    default void setPage(int page) {
+        throw new IllegalStateException("Interface not implemented");
+    }
+
+    default int getPageCount() {
+        throw new IllegalStateException("Interface not implemented");
+    }
 }
