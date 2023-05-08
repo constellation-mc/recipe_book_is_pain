@@ -1,3 +1,3 @@
 ### What's new:
 
-* Updated CrackerUtil
+* Fixed smoker crash.
