@@ -24,7 +24,7 @@ public class ClientRecipeBookMixin {
     private static final CombinedDynamicRegistries<ClientDynamicRegistryType> RBIP$THANKS = ClientDynamicRegistryType.createCombinedDynamicRegistries();
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void rbip$setupGroups(CallbackInfo ci) {
-        ItemGroups.updateDisplayContext(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true, RBIP$THANKS.getCombinedRegistryManager());
+        ItemGroups.updateDisplayContext(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.VANILLA), true, RBIP$THANKS.getCombinedRegistryManager());
         for (ItemGroup group : ItemGroups.getGroups()) {
             if (group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH) {
                 group.getSearchTabStacks().forEach(stack -> {

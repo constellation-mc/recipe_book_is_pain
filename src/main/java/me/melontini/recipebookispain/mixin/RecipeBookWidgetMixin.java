@@ -4,12 +4,12 @@ import me.melontini.recipebookispain.RecipeBookIsPain;
 import me.melontini.recipebookispain.access.RecipeBookWidgetAccess;
 import me.melontini.recipebookispain.access.RecipeGroupButtonAccess;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.text.Text;
@@ -72,20 +72,20 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
-    private void rbip$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        rbip$renderPageText(matrices);
-        this.prevPageButton.render(matrices, mouseX, mouseY, delta);
-        this.nextPageButton.render(matrices, mouseX, mouseY, delta);
+    private void rbip$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        rbip$renderPageText(context);
+        this.prevPageButton.render(context, mouseX, mouseY, delta);
+        this.nextPageButton.render(context, mouseX, mouseY, delta);
 
         if (client.currentScreen != null) {
             this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
                 if (widget.getCategory().name().contains("_SEARCH")) {
-                    client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
+                    context.drawTooltip(client.textRenderer, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
                 } else {
                     if (RecipeBookIsPain.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.containsKey(widget.getCategory())) {
                         Text text = RecipeBookIsPain.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
                         if (text != null) {
-                            client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+                            context.drawTooltip(client.textRenderer, text, mouseX, mouseY);
                         }
                     }
                 }
@@ -94,7 +94,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
     }
 
     @Unique
-    private void rbip$renderPageText(MatrixStack matrices) {
+    private void rbip$renderPageText(DrawContext context) {
         int x = (this.parentWidth - 135) / 2 - this.leftOffset - 30;
         int y = (this.parentHeight + 169) / 2 + 3;
         int displayPage = this.page + 1;
@@ -102,7 +102,7 @@ public abstract class RecipeBookWidgetMixin implements RecipeBookWidgetAccess {
         if (this.pages > 1) {
             String string = "" + displayPage + "/" + displayPages;
             int textLength = this.client.textRenderer.getWidth(string);
-            this.client.textRenderer.draw(matrices, string, (x - textLength / 2F + 20F), y, -1);
+            context.drawText(this.client.textRenderer, string, (int) (x - textLength / 2F + 20F), y, -1, false);
         }
     }
 
