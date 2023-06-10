@@ -2,9 +2,9 @@ package me.melontini.recipebookispain.mixin;
 
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
@@ -25,16 +25,16 @@ public abstract class RecipeBookWidgetMixin {
     private List<RecipeGroupButtonWidget> tabButtons;
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")
-    private void rbip$render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void rbip$render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (client.currentScreen != null) {
             this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
                 if (widget.getCategory().name().contains("_SEARCH")) {
-                    client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
+                    context.drawTooltip(client.textRenderer, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
                 } else {
                     if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()) != null) {
                         Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
                         if (text != null) {
-                            client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+                            context.drawTooltip(client.textRenderer, text, mouseX, mouseY);
                         }
                     }
                 }

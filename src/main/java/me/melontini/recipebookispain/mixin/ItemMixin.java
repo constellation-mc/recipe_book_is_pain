@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Item.class)
 public class ItemMixin implements ItemAccess {
-    public ItemGroup rbip$possibleGroup = ItemGroups.getDefaultTab();
+    public ItemGroup rbip$possibleGroup;
 
     @Override
     public ItemGroup rbip$getPossibleGroup() {
-        return rbip$possibleGroup;
+        return rbip$possibleGroup != null ? rbip$possibleGroup : ItemGroups.getDefaultTab();
     }
 
     @Override
