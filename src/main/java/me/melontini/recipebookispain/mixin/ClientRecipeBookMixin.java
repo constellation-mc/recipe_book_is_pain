@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin;
 
-import me.melontini.crackerutil.util.EnumWrapper;
+import me.melontini.dark_matter.enums.util.EnumWrapper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
