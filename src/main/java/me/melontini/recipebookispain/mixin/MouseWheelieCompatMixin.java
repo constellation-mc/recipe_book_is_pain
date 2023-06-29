@@ -2,8 +2,8 @@ package me.melontini.recipebookispain.mixin;
 
 import de.siphalor.mousewheelie.client.mixin.gui.other.MixinRecipeBookWidget;
 import de.siphalor.mousewheelie.client.util.ScrollAction;
-import me.melontini.crackerutil.util.mixin.MixinShouldApply;
-import me.melontini.crackerutil.util.mixin.Mod;
+import me.melontini.dark_matter.util.mixin.MixinShouldApply;
+import me.melontini.dark_matter.util.mixin.Mod;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
