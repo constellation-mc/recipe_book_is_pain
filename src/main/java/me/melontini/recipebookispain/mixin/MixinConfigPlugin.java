@@ -31,7 +31,7 @@ public class MixinConfigPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("MouseWheelieCompatMixin") && !FabricLoader.getInstance().isModLoaded("mousewheelie")) {
             return false;
         }
-        if ((mixinClassName.contains("widget.RecipeGroupButtonMixin") || mixinClassName.contains("widget.RecipeBookWidgetMixin")) && FabricLoader.getInstance().isModLoaded("cracker-util-recipe-book")) {
+        if ((mixinClassName.contains("widget.RecipeGroupButtonMixin") || mixinClassName.contains("widget.RecipeBookWidgetMixin")) && (FabricLoader.getInstance().isModLoaded("cracker-util-recipe-book") || FabricLoader.getInstance().isModLoaded("dark-matter-recipe-book"))) {
             LOGGER.warn("[RBIP] CrackerUtil Recipe Book is loaded, skipping {} application", strings[strings.length - 1]);
             return false;
         }
