@@ -1,3 +1,3 @@
 ### What's new:
 
-* Fixed smoker crash.
+* CrackerUtil -> Dark Matter

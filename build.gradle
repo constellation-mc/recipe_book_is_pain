@@ -34,10 +34,11 @@ dependencies {
         exclude (group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation include("me.melontini.cracker-util:cracker-util-base:${project.cracker_util}")
-    modImplementation include("me.melontini.cracker-util:cracker-util-recipe-book:${project.cracker_util}")
-    modImplementation include("me.melontini.cracker-util:cracker-util-enums:${project.cracker_util}")
-    modImplementation ("me.melontini.cracker-util:cracker-util-content:${project.cracker_util}") //only for icon group compat
+    modImplementation include("me.melontini.dark-matter:dark-matter-base:${project.dark_matter}")
+    modImplementation include("me.melontini.dark-matter:dark-matter-minecraft:${project.dark_matter}")
+    modImplementation include("me.melontini.dark-matter:dark-matter-enums:${project.dark_matter}")
+    modImplementation include("me.melontini.dark-matter:dark-matter-recipe-book:${project.dark_matter}")
+    modImplementation ("me.melontini.dark-matter:dark-matter-content:${project.dark_matter}") //only for icon group compat
 }
 
 processResources {
