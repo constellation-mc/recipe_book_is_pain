@@ -26,7 +26,7 @@ import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_SEAR
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-    @Inject(at = @At("HEAD"), method = "<clinit>")
+    @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void rbip$clinit(CallbackInfo ci) {
         ItemGroups.updateDisplayParameters(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true);
         CRAFTING_SEARCH_LIST = new ArrayList<>();
