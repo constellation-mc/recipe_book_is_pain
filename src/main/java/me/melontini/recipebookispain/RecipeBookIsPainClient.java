@@ -2,7 +2,6 @@ package me.melontini.recipebookispain;
 
 
 import io.wispforest.owo.itemgroup.OwoItemGroup;
-import me.melontini.dark_matter.util.PrependingLogger;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,17 +12,26 @@ import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class RecipeBookIsPainClient implements ClientModInitializer {
+
+    public static final Logger LOGGER = LogManager.getLogger("RBIP");
     public static final boolean isOwOLoaded = FabricLoader.getInstance().isModLoaded("owo");
-    public static final boolean isCrackerContentLoaded = FabricLoader.getInstance().isModLoaded("cracker-util-content");
-    public static final PrependingLogger LOGGER = new PrependingLogger(LogManager.getLogger("RBIP"), PrependingLogger.LOGGER_NAME);
+    public static final boolean isDarkMatterContentLoaded = FabricLoader.getInstance().isModLoaded("dark-matter-content");
+    public static List<RecipeBookGroup> CRAFTING_SEARCH_LIST;
+    public static List<RecipeBookGroup> CRAFTING_LIST;
     public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
     public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
+
+    @Override
+    public void onInitializeClient() {
+    }
 
     public static boolean rbip$renderOwo(DrawContext context, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
         if (group instanceof OwoItemGroup owoItemGroup) {
@@ -36,15 +44,12 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
         return false;
     }
 
-    public static boolean renderCracker(DrawContext context, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
-        if (group.shouldAnimateIcon()) {
-            group.getIconAnimation().animateIcon(context, widget.getX() + 9 + i, widget.getY() + 5, widget.isToggled(), false);
+    public static boolean renderDarkMatter(DrawContext context, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
+        if (group.dm$shouldAnimateIcon()) {
+            group.dm$getIconAnimation().animateIcon(context, widget.getX() + 9 + i, widget.getY() + 5, widget.isToggled(), false);
             return true;
         }
         return false;
     }
 
-    @Override
-    public void onInitializeClient() {
-    }
 }

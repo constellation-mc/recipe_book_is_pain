@@ -1,4 +1,4 @@
-package me.melontini.recipebookispain.mixin;
+package me.melontini.recipebookispain.mixin.widget;
 
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.gui.DrawContext;
@@ -13,9 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.rbip$renderOwo;
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.renderCracker;
 
 @Mixin(RecipeGroupButtonWidget.class)
 public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
@@ -35,13 +32,13 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
         int i = this.toggled ? -2 : 0;
 
         if (RecipeBookIsPainClient.isOwOLoaded) {
-            if (rbip$renderOwo(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+            if (RecipeBookIsPainClient.rbip$renderOwo(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }
         }
-        if (RecipeBookIsPainClient.isCrackerContentLoaded) {
-            if (renderCracker(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
+            if (RecipeBookIsPainClient.renderDarkMatter(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
             }
         }
