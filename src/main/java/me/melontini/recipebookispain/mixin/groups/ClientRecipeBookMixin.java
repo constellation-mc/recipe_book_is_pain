@@ -28,9 +28,10 @@ import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_SEAR
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-    private static final CombinedDynamicRegistries<ClientDynamicRegistryType> RBIP$THANKS = ClientDynamicRegistryType.createCombinedDynamicRegistries();
+    private static CombinedDynamicRegistries<ClientDynamicRegistryType> RBIP$THANKS ;
     @Inject(at = @At("HEAD"), method = "<clinit>")
     private static void rbip$clinit(CallbackInfo ci) {
+        RBIP$THANKS = ClientDynamicRegistryType.createCombinedDynamicRegistries();
         ItemGroups.updateDisplayContext(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true, RBIP$THANKS.getCombinedRegistryManager());
         CRAFTING_SEARCH_LIST = new ArrayList<>();
         CRAFTING_LIST = new ArrayList<>();
