@@ -46,7 +46,7 @@ public class RecipeBookIsPainClient implements ClientModInitializer {
 
     public static boolean renderDarkMatter(MatrixStack matrices, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
         if (group.dm$shouldAnimateIcon()) {
-            group.dm$getIconAnimation().animateIcon(matrices, widget.x + 9 + i, widget.y + 5, widget.isToggled(), false);
+            group.dm$getIconAnimation().animateIcon(matrices, widget.getX() + 9 + i, widget.getY() + 5, widget.isToggled(), false);
             return true;
         }
         return false;

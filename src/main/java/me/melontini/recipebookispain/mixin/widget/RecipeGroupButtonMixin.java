@@ -37,17 +37,17 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
         if (this.bounce > 0.0F) {
             float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * (float) Math.PI);
             matrices.push();
-            matrices.translate((float) (this.x + 8), (float) (this.y + 12), 0.0F);
+            matrices.translate((float) (this.getX() + 8), (float) (this.getY() + 12), 0.0F);
             matrices.scale(1.0F, f, 1.0F);
-            matrices.translate((float) (-(this.x + 8)), (float) (-(this.y + 12)), 0.0F);
+            matrices.translate((float) (-(this.getX() + 8)), (float) (-(this.getY() + 12)), 0.0F);
         }
 
-        /*if (RecipeBookIsPainClient.isOwOLoaded) {
+        if (RecipeBookIsPainClient.isOwOLoaded) {
             if (RecipeBookIsPainClient.rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }
-        }*/
+        }
 
         if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
             if (RecipeBookIsPainClient.renderDarkMatter(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
