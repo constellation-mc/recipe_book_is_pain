@@ -37,7 +37,7 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
                 return;
             }
         }
-        if (RecipeBookIsPainClient.isCrackerContentLoaded) {
+        if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
             if (RecipeBookIsPainClient.renderDarkMatter(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
             }
