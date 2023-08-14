@@ -1,13 +1,14 @@
 package me.melontini.recipebookispain.mixin.groups;
 
+import me.melontini.dark_matter.api.recipe_book.RecipeBookHelper;
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
-import me.melontini.recipebookispain.util.EnumUtils;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,28 +31,14 @@ public class ClientRecipeBookMixin {
         Arrays.stream(ItemGroup.GROUPS).filter(itemGroup -> itemGroup != ItemGroup.HOTBAR && itemGroup != ItemGroup.INVENTORY && itemGroup != ItemGroup.SEARCH)
                 .forEach(itemGroup -> {
                     try {
-                        String name = "P_CRAFTING_" + itemGroup.getIndex();
-                        RecipeBookGroup recipeBookGroup = EnumUtils.callRecipeBookEnumInvoker(name, itemGroup.getIcon());
+                        RecipeBookGroup recipeBookGroup = RecipeBookHelper.createGroup(new Identifier("rbip", "crafting_" + itemGroup.getIndex()), itemGroup.getIcon());
                         RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
                         RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(itemGroup, recipeBookGroup);
 
                         CRAFTING_LIST.add(recipeBookGroup);
                         CRAFTING_SEARCH_LIST.add(recipeBookGroup);
                     } catch (Exception e) {
-                        String info;
-                        try {
-                            info = String.format("%s item group", itemGroup.getName());
-                        } catch (Throwable t) {
-                            try {
-                                info = String.format("%s item group", itemGroup.getDisplayName().asString());
-                            } catch (Throwable t1) {
-                                try {
-                                    info = String.format("item group with %s icon", itemGroup.getIcon().toString());
-                                } catch (Throwable t2) {
-                                    info = "item group";
-                                }
-                            }
-                        }
+                        String info = String.format("%s item group", itemGroup.getName());
                         RecipeBookIsPainClient.LOGGER.error(String.format("Error while processing %s", info), e);
                     }
                 });

@@ -1,3 +1,5 @@
 ### What's new:
 
-* Added compat with `dark-matter-recipe-book`
+* 1.18.2 version now uses Dark Matter
+* Updated Dark Matter.
+* Other changes, but I forgor 💀

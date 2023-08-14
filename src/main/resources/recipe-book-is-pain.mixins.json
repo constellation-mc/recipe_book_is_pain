@@ -3,17 +3,13 @@
   "minVersion": "0.8",
   "package": "me.melontini.recipebookispain.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "me.melontini.recipebookispain.mixin.MixinConfigPlugin",
   "mixins": [
   ],
   "client": [
     "MouseWheelieCompatMixin",
-    "cracker_compat.RecipeBookWidgetMixin",
-    "cracker_compat.RecipeGroupButtonMixin",
     "groups.ClientRecipeBookMixin",
     "groups.RecipeBookGroupMixin",
     "widget.RecipeBookTooltipMixin",
-    "widget.RecipeBookWidgetMixin",
     "widget.RecipeGroupButtonMixin"
   ],
   "injectors": {

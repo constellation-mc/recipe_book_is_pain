@@ -1,8 +1,5 @@
 name: publish
-on:
-  push:
-    tags:
-      - 'v*'
+on: [workflow_dispatch]
 
 jobs:
   publish:
@@ -26,7 +23,7 @@ jobs:
       - name: build
         run: ./gradlew build
       - name: Publish Minecraft Mods
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           version-type: release
           changelog-file: CHANGELOG.md
@@ -34,21 +31,24 @@ jobs:
           version: ${{ env.VERSION_PLAIN }}
 
           game-versions: |
-            1.18
-            1.18.1
             1.18.2
-            1.19
-            1.19.1
-            1.19.2
 
           loaders: |
             fabric
+
+          github-tag: v${{ env.VERSION_PLAIN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-prerelease: false
 
           modrinth-id: etNS9OnA
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
           modrinth-unfeature-mode: subset
+          modrinth-dependencies: |
+            dark-matter(embedded)
 
 
           curseforge-id: 643246
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-dependencies: |
+            dark-matter(embedded)

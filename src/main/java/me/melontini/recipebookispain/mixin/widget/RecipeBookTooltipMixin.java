@@ -4,6 +4,7 @@ import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
+import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
@@ -26,7 +27,7 @@ public class RecipeBookTooltipMixin {
     private void rbip$renderTooltip(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (client.currentScreen != null) {
             this.tabButtons.stream().filter(widget -> widget.visible && widget.isHovered()).forEach(widget -> {
-                if (widget.getCategory().name().contains("_SEARCH")) {
+                if (RecipeBookGroup.SEARCH_MAP.containsKey(widget.getCategory())) {
                     client.currentScreen.renderTooltip(matrices, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else {
                     if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.containsKey(widget.getCategory())) {
