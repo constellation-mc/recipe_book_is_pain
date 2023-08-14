@@ -1,4 +1,4 @@
-package me.melontini.recipebookispain.mixin;
+package me.melontini.recipebookispain.mixin.widget;
 
 import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
@@ -13,9 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.rbip$renderOwo;
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.renderCracker;
 
 @Mixin(RecipeGroupButtonWidget.class)
 public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
@@ -40,18 +37,20 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
         if (this.bounce > 0.0F) {
             float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * (float) Math.PI);
             matrices.push();
-            matrices.translate((float) (this.getX() + 8), (float) (this.getY() + 12), 0.0F);
+            matrices.translate((float) (this.x + 8), (float) (this.y + 12), 0.0F);
             matrices.scale(1.0F, f, 1.0F);
-            matrices.translate((float) (-(this.getX() + 8)), (float) (-(this.getY() + 12)), 0.0F);
+            matrices.translate((float) (-(this.x + 8)), (float) (-(this.y + 12)), 0.0F);
         }
-        if (RecipeBookIsPainClient.isOwOLoaded) {
-            if (rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+
+        /*if (RecipeBookIsPainClient.isOwOLoaded) {
+            if (RecipeBookIsPainClient.rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }
-        }
-        if (RecipeBookIsPainClient.isCrackerContentLoaded) {
-            if (renderCracker(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        }*/
+
+        if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
+            if (RecipeBookIsPainClient.renderDarkMatter(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
             }
         }
