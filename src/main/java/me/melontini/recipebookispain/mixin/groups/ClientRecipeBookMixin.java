@@ -10,6 +10,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,8 +24,14 @@ import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_SEAR
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
 public class ClientRecipeBookMixin {
-    @Inject(at = @At("TAIL"), method = "<clinit>")
-    private static void rbip$clinit(CallbackInfo ci) {
+
+    @Unique
+    private static boolean rbip$firstReload = true;
+
+    @Inject(at = @At("HEAD"), method = "reload")
+    private void rbip$reload(CallbackInfo ci) {
+        if (!rbip$firstReload) return;
+
         CRAFTING_SEARCH_LIST = new ArrayList<>();
         CRAFTING_LIST = new ArrayList<>();
 
@@ -44,15 +51,14 @@ public class ClientRecipeBookMixin {
                 });
         CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
 
-        RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).clear();
-        RecipeBookGroup.SEARCH_MAP.get(RecipeBookGroup.CRAFTING_SEARCH).addAll(CRAFTING_SEARCH_LIST);
+        RecipeBookGroup.SEARCH_MAP.replace(RecipeBookGroup.CRAFTING_SEARCH, CRAFTING_SEARCH_LIST);
         RecipeBookIsPainClient.LOGGER.info("[RBIP] recipe book init complete");
+        rbip$firstReload = false;
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
-        RecipeType<?> recipeType = recipe.getType();
-        if (recipeType == RecipeType.CRAFTING) {
+        if (RecipeType.CRAFTING.equals(recipe.getType())) {
             ItemStack itemStack = recipe.getOutput();
             ItemGroup group = itemStack.getItem().getGroup();
             if (group != null) {
@@ -66,4 +72,5 @@ public class ClientRecipeBookMixin {
             cir.setReturnValue(RecipeBookIsPainClient.ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(ItemGroup.MISC));
         }
     }
+
 }
