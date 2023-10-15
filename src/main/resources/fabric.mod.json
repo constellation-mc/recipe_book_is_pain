@@ -12,9 +12,6 @@
   "icon": "assets/recipe-book-is-pain/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "me.melontini.recipebookispain.RecipeBookIsPainClient"
-    ]
   },
   "mixins": [
     "recipe-book-is-pain.mixins.json"

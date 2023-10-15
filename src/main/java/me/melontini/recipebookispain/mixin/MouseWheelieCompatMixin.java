@@ -40,5 +40,4 @@ public abstract class MouseWheelieCompatMixin {
     private void rbip$hideAlternatives(double mouseX, double mouseY, double scrollAmount, CallbackInfoReturnable<ScrollAction> cir) {
         this.recipesArea.hideAlternates();
     }
-
 }

@@ -36,7 +36,7 @@ dependencies {
     }
     modApi("me.melontini.dark-matter:dark-matter-content:${project.dark_matter}")
 
-    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+    modCompileOnly("io.wispforest:owo-lib:${project.owo_version}")
 }
 
 processResources {

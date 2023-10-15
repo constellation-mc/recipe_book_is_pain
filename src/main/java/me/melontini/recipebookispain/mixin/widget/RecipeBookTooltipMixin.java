@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Optional;
 
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP;
+import static me.melontini.recipebookispain.RecipeBookIsPain.toItemGroup;
 
 @Mixin(value = RecipeBookWidget.class, priority = 1001)
 public class RecipeBookTooltipMixin {
@@ -31,7 +31,7 @@ public class RecipeBookTooltipMixin {
                 if (RecipeBookGroup.SEARCH_MAP.containsKey(widget.getCategory())) {
                     client.currentScreen.renderTooltip(matrices, ItemGroup.SEARCH.getDisplayName(), mouseX, mouseY);
                 } else {
-                    Optional.ofNullable(RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()))
+                    Optional.ofNullable(toItemGroup(widget.getCategory()))
                             .map(ItemGroup::getDisplayName)
                             .ifPresent(text -> client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY));
                 }
