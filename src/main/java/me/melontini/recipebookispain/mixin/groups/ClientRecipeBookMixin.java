@@ -4,7 +4,7 @@ import me.melontini.dark_matter.api.recipe_book.RecipeBookHelper;
 import me.melontini.recipebookispain.FeatureMultiverse;
 import me.melontini.recipebookispain.RecipeBookIsPain;
 import me.melontini.recipebookispain.access.ItemAccess;
-import net.minecraft.client.network.ClientDynamicRegistryType;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
@@ -33,7 +33,7 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "reload")
     private void rbip$reload(CallbackInfo ci) {
         if (!rbip$firstReload) return;
-        ItemGroups.updateDisplayParameters(FeatureMultiverse.getFeatureSet(), true);
+        ItemGroups.updateDisplayContext(FeatureMultiverse.getFeatureSet(), true, MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
@@ -63,7 +63,7 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         if (RecipeType.CRAFTING.equals(recipe.getType())) {
-            ItemStack itemStack = recipe.getOutput(RBIP$THANKS.getCombinedRegistryManager());
+            ItemStack itemStack = recipe.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
             Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
                     .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)
