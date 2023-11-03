@@ -10,7 +10,7 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -62,9 +62,9 @@ public class ClientRecipeBookMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
-    private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
-        if (RecipeType.CRAFTING.equals(recipe.getType())) {
-            ItemStack itemStack = recipe.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
+    private static void rbip$getGroupForRecipe(RecipeEntry<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
+        if (RecipeType.CRAFTING.equals(recipe.value().getType())) {
+            ItemStack itemStack = recipe.value().getResult(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
             Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
                     .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)
