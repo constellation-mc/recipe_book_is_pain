@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin.widget;
 
-import me.melontini.recipebookispain.RecipeBookIsPainClient;
+import me.melontini.recipebookispain.RecipeBookIsPain;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
@@ -26,19 +26,19 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
 
     @Inject(at = @At("HEAD"), method = "renderIcons", cancellable = true)
     private void rbip$render(DrawContext context, ItemRenderer itemRenderer, CallbackInfo ci) {
-        ItemGroup group = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(this.category);
+        ItemGroup group = RecipeBookIsPain.toItemGroup(this.category);
         if (group == null) return;
 
         int i = this.toggled ? -2 : 0;
 
-        if (RecipeBookIsPainClient.isOwOLoaded) {
-            if (RecipeBookIsPainClient.rbip$renderOwo(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        if (RecipeBookIsPain.isOwOLoaded) {
+            if (RecipeBookIsPain.rbip$renderOwo(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }
         }
-        if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
-            if (RecipeBookIsPainClient.renderDarkMatter(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        if (RecipeBookIsPain.isDarkMatterContentLoaded) {
+            if (RecipeBookIsPain.renderDarkMatter(context, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
             }
         }
