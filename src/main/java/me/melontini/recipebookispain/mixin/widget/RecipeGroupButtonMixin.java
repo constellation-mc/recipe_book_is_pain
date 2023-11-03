@@ -42,8 +42,8 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
             matrices.translate(-(this.getX() + 8), -(this.getY() + 12), 0.0F);
         }
 
-        if (RecipeBookIsPainClient.isOwOLoaded) {
-            if (RecipeBookIsPainClient.rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        if (RecipeBookIsPain.isOwOLoaded) {
+            if (RecipeBookIsPain.rbip$renderOwo(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
                 return;
             }

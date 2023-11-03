@@ -1,6 +1,7 @@
 package me.melontini.recipebookispain.mixin.groups;
 
 import me.melontini.dark_matter.api.recipe_book.RecipeBookHelper;
+import me.melontini.recipebookispain.FeatureMultiverse;
 import me.melontini.recipebookispain.RecipeBookIsPain;
 import me.melontini.recipebookispain.access.ItemAccess;
 import net.minecraft.client.recipebook.ClientRecipeBook;
@@ -10,8 +11,6 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static me.melontini.recipebookispain.RecipeBookIsPain.*;
@@ -34,14 +32,10 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "reload")
     private void rbip$reload(CallbackInfo ci) {
         if (!rbip$firstReload) return;
-        ItemGroups.updateDisplayParameters(FeatureSet.of(FeatureFlags.BUNDLE, FeatureFlags.UPDATE_1_20, FeatureFlags.VANILLA), true);
+        ItemGroups.updateDisplayParameters(FeatureMultiverse.getFeatureSet(), true);
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
-                .forEach(group -> group.getSearchTabStacks().forEach(stack -> {
-                    if (((ItemAccess) stack.getItem()).rbip$getPossibleGroup() == ItemGroups.getDefaultTab()) {
-                        ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group);
-                    }
-                }));
+                .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(itemGroup -> {
@@ -53,7 +47,7 @@ public class ClientRecipeBookMixin {
                         CRAFTING_LIST.add(recipeBookGroup);
                         CRAFTING_SEARCH_LIST.add(recipeBookGroup);
                     } catch (Exception e) {
-                        RecipeBookIsPain.LOGGER.error("Error while processing %s item group".formatted(itemGroup.getName()), e);
+                        RecipeBookIsPain.LOGGER.error("Error while processing %s item group".formatted(itemGroup.getDisplayName()), e);
                     }
                 });
         CRAFTING_LIST.add(0, RecipeBookGroup.CRAFTING_SEARCH);
@@ -70,9 +64,9 @@ public class ClientRecipeBookMixin {
         if (RecipeType.CRAFTING.equals(recipe.getType())) {
             ItemStack itemStack = recipe.getOutput();
             Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
-                    .filter(group -> !group.isSpecial() && group != ItemGroup.INVENTORY && group != ItemGroup.SEARCH)
+                    .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)
-                    .ifPresentOrElse(cir::setReturnValue, () -> cir.setReturnValue(toRecipeBookGroup(ItemGroup.MISC)));
+                    .ifPresentOrElse(cir::setReturnValue, () -> cir.setReturnValue(toRecipeBookGroup(ItemGroups.BUILDING_BLOCKS)));
         }
     }
 }
