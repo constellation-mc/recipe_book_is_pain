@@ -1,13 +1,12 @@
 package me.melontini.recipebookispain.mixin.widget;
 
-import me.melontini.recipebookispain.RecipeBookIsPainClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.Optional;
+
+import static me.melontini.recipebookispain.RecipeBookIsPain.toItemGroup;
 
 @Mixin(value = RecipeBookWidget.class, priority = 1001)
 public class RecipeBookTooltipMixin {
@@ -30,12 +32,9 @@ public class RecipeBookTooltipMixin {
                 if (RecipeBookGroup.SEARCH_MAP.containsKey(widget.getCategory())) {
                     client.currentScreen.renderTooltip(matrices, ItemGroups.getSearchGroup().getDisplayName(), mouseX, mouseY);
                 } else {
-                    if (RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.containsKey(widget.getCategory())) {
-                        Text text = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(widget.getCategory()).getDisplayName();
-                        if (text != null) {
-                            client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
-                        }
-                    }
+                    Optional.ofNullable(toItemGroup(widget.getCategory()))
+                            .map(ItemGroup::getDisplayName)
+                            .ifPresent(text -> client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY));
                 }
             });
         }
