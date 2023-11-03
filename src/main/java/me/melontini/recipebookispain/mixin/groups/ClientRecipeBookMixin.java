@@ -12,6 +12,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -67,7 +68,7 @@ public class ClientRecipeBookMixin {
             Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
                     .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)
-                    .ifPresentOrElse(cir::setReturnValue, () -> cir.setReturnValue(toRecipeBookGroup(ItemGroups.BUILDING_BLOCKS)));
+                    .ifPresentOrElse(cir::setReturnValue, () -> cir.setReturnValue(toRecipeBookGroup(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS))));
         }
     }
 }
