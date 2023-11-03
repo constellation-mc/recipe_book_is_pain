@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import static me.melontini.recipebookispain.RecipeBookIsPainClient.CRAFTING_LIST;
+import static me.melontini.recipebookispain.RecipeBookIsPain.CRAFTING_LIST;
 
 @Mixin(RecipeBookGroup.class)
 @Unique
@@ -20,5 +20,4 @@ public class RecipeBookGroupMixin {
     private static void rbip$getGroups(RecipeBookCategory category, CallbackInfoReturnable<List<RecipeBookGroup>> cir) {
         if (category == RecipeBookCategory.CRAFTING) cir.setReturnValue(CRAFTING_LIST);
     }
-
 }

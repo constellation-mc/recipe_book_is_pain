@@ -1,6 +1,6 @@
 package me.melontini.recipebookispain.mixin.widget;
 
-import me.melontini.recipebookispain.RecipeBookIsPainClient;
+import me.melontini.recipebookispain.RecipeBookIsPain;
 import net.minecraft.client.gui.screen.recipebook.RecipeGroupButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.RecipeBookGroup;
@@ -28,18 +28,18 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
 
     @Inject(at = @At("HEAD"), method = "renderIcons", cancellable = true)
     private void rbip$render(ItemRenderer itemRenderer, CallbackInfo ci) {
-        ItemGroup group = RecipeBookIsPainClient.RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(this.category);
+        ItemGroup group = RecipeBookIsPain.toItemGroup(this.category);
         if (group == null) return;
 
         int i = this.toggled ? -2 : 0;
         MatrixStack matrices = new MatrixStack();
 
         if (this.bounce > 0.0F) {
-            float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * (float) Math.PI);
+            float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * Math.PI);
             matrices.push();
-            matrices.translate((float) (this.getX() + 8), (float) (this.getY() + 12), 0.0F);
+            matrices.translate(this.getX() + 8, this.getY() + 12, 0.0F);
             matrices.scale(1.0F, f, 1.0F);
-            matrices.translate((float) (-(this.getX() + 8)), (float) (-(this.getY() + 12)), 0.0F);
+            matrices.translate(-(this.getX() + 8), -(this.getY() + 12), 0.0F);
         }
 
         if (RecipeBookIsPainClient.isOwOLoaded) {
@@ -49,8 +49,8 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
             }
         }
 
-        if (RecipeBookIsPainClient.isDarkMatterContentLoaded) {
-            if (RecipeBookIsPainClient.renderDarkMatter(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
+        if (RecipeBookIsPain.isDarkMatterContentLoaded) {
+            if (RecipeBookIsPain.renderDarkMatter(matrices, i, (RecipeGroupButtonWidget) (Object) this, group)) {
                 ci.cancel();
             }
         }
