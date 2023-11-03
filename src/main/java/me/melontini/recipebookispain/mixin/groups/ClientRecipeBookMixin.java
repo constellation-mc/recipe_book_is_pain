@@ -33,7 +33,7 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "reload")
     private void rbip$reload(CallbackInfo ci) {
         if (!rbip$firstReload) return;
-        ItemGroups.updateDisplayContext(FeatureMultiverse.getFeatureSet(), true, MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
+        ItemGroups.updateDisplayContext(FeatureMultiverse.getFeatureSet(), false, MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
