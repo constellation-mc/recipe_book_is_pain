@@ -35,11 +35,11 @@ public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
         MatrixStack matrices = new MatrixStack();
 
         if (this.bounce > 0.0F) {
-            float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * (float) Math.PI);
+            float f = 1.0F + 0.1F * (float) Math.sin(this.bounce / 15.0F * Math.PI);
             matrices.push();
-            matrices.translate((float) (this.x + 8), (float) (this.y + 12), 0.0F);
+            matrices.translate(this.x + 8, this.y + 12, 0.0F);
             matrices.scale(1.0F, f, 1.0F);
-            matrices.translate((float) (-(this.x + 8)), (float) (-(this.y + 12)), 0.0F);
+            matrices.translate(-(this.x + 8), -(this.y + 12), 0.0F);
         }
 
         /*if (RecipeBookIsPainClient.isOwOLoaded) {
