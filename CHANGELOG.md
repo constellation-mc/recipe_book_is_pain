@@ -1,5 +1,6 @@
 ### What's new:
 
-* 1.18.2 version now uses Dark Matter
 * Updated Dark Matter.
-* Other changes, but I forgor 💀
+* Removed the MouseWheelie compat mixin in favor of a more general patch in DM.
+* Moved group init to `reload` instead of `<clinit>`.
+* Other minor things.
