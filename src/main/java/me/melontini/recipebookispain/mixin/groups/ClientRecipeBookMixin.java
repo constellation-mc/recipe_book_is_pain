@@ -32,7 +32,7 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "reload")
     private void rbip$reload(CallbackInfo ci) {
         if (!rbip$firstReload) return;
-        ItemGroups.updateDisplayParameters(FeatureMultiverse.getFeatureSet(), true);
+        ItemGroups.updateDisplayParameters(FeatureMultiverse.getFeatureSet(), false);
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
