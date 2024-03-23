@@ -22,7 +22,6 @@ import static me.melontini.recipebookispain.RecipeBookIsPain.toItemGroup;
 @Mixin(value = RecipeBookWidget.class, priority = 1001)
 public class RecipeBookTooltipMixin {
     @Shadow protected MinecraftClient client;
-
     @Shadow @Final private List<RecipeGroupButtonWidget> tabButtons;
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE), method = "render")

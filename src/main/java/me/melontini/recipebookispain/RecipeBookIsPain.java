@@ -1,7 +1,8 @@
 package me.melontini.recipebookispain;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,9 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class RecipeBookIsPain {
@@ -27,15 +26,14 @@ public class RecipeBookIsPain {
 
     public static List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
     public static List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
-    public static Map<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = new HashMap<>();
-    public static Map<ItemGroup, RecipeBookGroup> ITEM_GROUP_TO_RECIPE_BOOK_GROUP = new HashMap<>();
+    public static BiMap<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = HashBiMap.create();
 
     public static ItemGroup toItemGroup(RecipeBookGroup recipeBookGroup) {
         return RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(recipeBookGroup);
     }
 
     public static RecipeBookGroup toRecipeBookGroup(ItemGroup itemGroup) {
-        return ITEM_GROUP_TO_RECIPE_BOOK_GROUP.get(itemGroup);
+        return RECIPE_BOOK_GROUP_TO_ITEM_GROUP.inverse().get(itemGroup);
     }
 
     public static boolean rbip$renderOwo(DrawContext context, int i, RecipeGroupButtonWidget widget, ItemGroup group) {

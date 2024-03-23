@@ -5,9 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Item.class)
 public class ItemMixin implements ItemAccess {
+    @Unique
     public ItemGroup rbip$possibleGroup;
 
     @Override

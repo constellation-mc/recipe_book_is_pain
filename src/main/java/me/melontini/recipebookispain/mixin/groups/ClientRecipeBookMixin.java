@@ -1,7 +1,7 @@
 package me.melontini.recipebookispain.mixin.groups;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.melontini.dark_matter.api.recipe_book.RecipeBookHelper;
-import me.melontini.recipebookispain.FeatureMultiverse;
 import me.melontini.recipebookispain.RecipeBookIsPain;
 import me.melontini.recipebookispain.access.ItemAccess;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +12,9 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,9 +34,9 @@ public class ClientRecipeBookMixin {
     private static boolean rbip$firstReload = true;
 
     @Inject(at = @At("HEAD"), method = "reload")
-    private void rbip$reload(CallbackInfo ci) {
+    private void rbip$reload(CallbackInfo ci, @Local(argsOnly = true) DynamicRegistryManager manager) {
         if (!rbip$firstReload) return;
-        ItemGroups.updateDisplayContext(FeatureMultiverse.getFeatureSet(), false, MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
+        ItemGroups.updateDisplayContext(FeatureFlags.FEATURE_MANAGER.getFeatureSet(), false, manager);
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
@@ -44,7 +46,6 @@ public class ClientRecipeBookMixin {
                     try {
                         RecipeBookGroup recipeBookGroup = RecipeBookHelper.createGroup(new Identifier("rbip", "crafting_" + ItemGroups.getGroups().indexOf(itemGroup)), itemGroup.getIcon());
                         RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
-                        ITEM_GROUP_TO_RECIPE_BOOK_GROUP.put(itemGroup, recipeBookGroup);
 
                         CRAFTING_LIST.add(recipeBookGroup);
                         CRAFTING_SEARCH_LIST.add(recipeBookGroup);
@@ -64,7 +65,10 @@ public class ClientRecipeBookMixin {
     @Inject(at = @At("HEAD"), method = "getGroupForRecipe", cancellable = true)
     private static void rbip$getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
         if (RecipeType.CRAFTING.equals(recipe.getType())) {
-            ItemStack itemStack = recipe.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
+            var nh = MinecraftClient.getInstance().getNetworkHandler();
+            if (nh == null) return;
+
+            ItemStack itemStack = recipe.getOutput(nh.getRegistryManager());
             Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
                     .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)

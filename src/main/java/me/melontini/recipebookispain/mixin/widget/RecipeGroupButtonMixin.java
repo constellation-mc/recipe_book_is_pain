@@ -16,9 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RecipeGroupButtonWidget.class)
 public abstract class RecipeGroupButtonMixin extends ToggleButtonWidget {
-    @Shadow
-    @Final
-    private RecipeBookGroup category;
+    @Shadow @Final private RecipeBookGroup category;
 
     public RecipeGroupButtonMixin(int x, int y, int width, int height, boolean toggled) {
         super(x, y, width, height, toggled);
