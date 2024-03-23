@@ -17,7 +17,7 @@
     "recipe-book-is-pain.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
-    "minecraft": ">=1.18"
+    "fabricloader": ">=${loader_version}",
+    "minecraft": ">=${minecraft_version}"
   }
 }
