@@ -3,9 +3,10 @@ package me.melontini.recipebookispain.mixin;
 import me.melontini.recipebookispain.access.ItemAccess;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+
+import java.util.Optional;
 
 @Mixin(Item.class)
 public class ItemMixin implements ItemAccess {
@@ -13,8 +14,8 @@ public class ItemMixin implements ItemAccess {
     public ItemGroup rbip$possibleGroup;
 
     @Override
-    public ItemGroup rbip$getPossibleGroup() {
-        return rbip$possibleGroup != null ? rbip$possibleGroup : ItemGroups.getDefaultTab();
+    public Optional<ItemGroup> rbip$getPossibleGroup() {
+        return Optional.ofNullable(rbip$possibleGroup);
     }
 
     @Override

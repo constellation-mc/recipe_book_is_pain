@@ -23,8 +23,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
-
 import static me.melontini.recipebookispain.RecipeBookIsPain.*;
 
 @Mixin(value = ClientRecipeBook.class, priority = 999)
@@ -39,7 +37,8 @@ public class ClientRecipeBookMixin {
         ItemGroups.updateDisplayContext(FeatureFlags.FEATURE_MANAGER.getFeatureSet(), false, manager);
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.SEARCH)
-                .forEach(group -> group.getSearchTabStacks().forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
+                .forEach(group -> group.getSearchTabStacks().stream().filter(stack -> ((ItemAccess) stack.getItem()).rbip$getPossibleGroup().isEmpty())
+                        .forEach(stack -> ((ItemAccess) stack.getItem()).rbip$setPossibleGroup(group)));
 
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(itemGroup -> {
@@ -69,7 +68,7 @@ public class ClientRecipeBookMixin {
             if (nh == null) return;
 
             ItemStack itemStack = recipe.value().getResult(nh.getRegistryManager());
-            Optional.ofNullable(((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup())
+            ((ItemAccess) itemStack.getItem()).rbip$getPossibleGroup()
                     .filter(group -> group.getType() != ItemGroup.Type.INVENTORY && group.getType() != ItemGroup.Type.HOTBAR && group.getType() != ItemGroup.Type.SEARCH)
                     .map(RecipeBookIsPain::toRecipeBookGroup)
                     .ifPresentOrElse(cir::setReturnValue, () -> cir.setReturnValue(toRecipeBookGroup(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS))));

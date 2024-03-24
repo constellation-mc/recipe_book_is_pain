@@ -7,7 +7,10 @@
   "authors": [
     "melontini"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/constellation-mc/recipe_book_is_pain",
+    "issues": "https://github.com/constellation-mc/recipe_book_is_pain/issues"
+  },
   "license": "MIT",
   "icon": "assets/recipe-book-is-pain/icon.png",
   "environment": "client",
