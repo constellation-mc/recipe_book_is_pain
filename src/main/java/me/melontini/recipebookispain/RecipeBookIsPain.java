@@ -3,6 +3,7 @@ package me.melontini.recipebookispain;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
+import me.melontini.dark_matter.impl.item_group.ItemGroupExtensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -48,8 +49,8 @@ public class RecipeBookIsPain {
     }
 
     public static boolean renderDarkMatter(DrawContext context, int i, RecipeGroupButtonWidget widget, ItemGroup group) {
-        if (group.dm$shouldAnimateIcon()) {
-            group.dm$getIconAnimation().animateIcon(group, context, widget.getX() + 9 + i, widget.getY() + 5, widget.isToggled(), false);
+        if (((ItemGroupExtensions)group).dm$getIconAnimation() != null) {
+            ((ItemGroupExtensions)group).dm$getIconAnimation().animateIcon(group, context, widget.getX() + 9 + i, widget.getY() + 5, widget.isToggled(), false);
             return true;
         }
         return false;

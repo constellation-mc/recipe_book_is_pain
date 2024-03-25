@@ -31,7 +31,7 @@ dependencies {
     for (final def module in dmModules) {
         modApi include("me.melontini.dark-matter:dark-matter-${module}:${project.dark_matter}")
     }
-    modApi("me.melontini.dark-matter:dark-matter-content:${project.dark_matter}")
+    modApi("me.melontini.dark-matter:dark-matter-item-group:${project.dark_matter}")
 
     modCompileOnly("io.wispforest:owo-lib:${project.owo_version}")
 }
