@@ -6,6 +6,8 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
+apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/dark_matter.groovy"
+
 repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
@@ -29,9 +31,9 @@ dependencies {
 
     def dmModules = ["base", "minecraft", "enums", "recipe-book"]
     for (final def module in dmModules) {
-        modApi include("me.melontini.dark-matter:dark-matter-${module}:${project.dark_matter}")
+        modApi include("me.melontini:dark-matter-${module}:${project.dark_matter}")
     }
-    modApi("me.melontini.dark-matter:dark-matter-item-group:${project.dark_matter}")
+    modApi("me.melontini:dark-matter-item-group:${project.dark_matter}")
 
     modCompileOnly("io.wispforest:owo-lib:${project.owo_version}")
 }
