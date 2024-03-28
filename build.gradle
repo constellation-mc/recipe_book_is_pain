@@ -32,7 +32,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    def dmModules = ["base", "minecraft", "enums", "recipe-book"]
+    def dmModules = ["base", "mixin", "minecraft", "enums", "recipe-book"]
     for (final def module in dmModules) {
         modApi include("me.melontini:dark-matter-${module}:${project.dark_matter}")
     }
