@@ -3,10 +3,13 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+def local = !System.getenv().containsKey("GITHUB_RUN_NUMBER")
+
+version = "${project.mod_version}-${project.minecraft_version}-${local ? 'local' : "build.${System.getenv("GITHUB_RUN_NUMBER")}"}"
 group = project.maven_group
 
-apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/dark_matter.groovy"
+apply from: "https://raw.githubusercontent.com/constellation-mc/artifacts/main/artifacts.groovy"
+constellationRepo(project, "dark-matter")
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -78,7 +81,7 @@ java {
 
 tasks.register('printVersionName') {
     doLast {
-        println "${version.split("-")[0]} (${version.split("-")[1]})"
+        println "${project.mod_version} (${project.minecraft_version})"
     }
 }
 
