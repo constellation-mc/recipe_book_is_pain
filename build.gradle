@@ -1,3 +1,5 @@
+import net.fabricmc.loom.api.RemapConfigurationSettings
+
 plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
@@ -26,6 +28,22 @@ repositories {
     maven { url 'https://maven.wispforest.io' }
 }
 
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    addRemapConfiguration("testmodRemapImplementation", (RemapConfigurationSettings configuration) -> {
+        configuration.getTargetConfigurationName().convention("testmodImplementation")
+        configuration.getOnCompileClasspath().convention(true)
+        configuration.getOnRuntimeClasspath().convention(true)
+        configuration.getPublishingMode().convention(RemapConfigurationSettings.PublishingMode.COMPILE_AND_RUNTIME)
+    })
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -39,6 +57,26 @@ dependencies {
     modApi("me.melontini:dark-matter-item-group:${project.dark_matter}")
 
     modCompileOnly("io.wispforest:owo-lib:${project.owo_version}")
+
+    testmodImplementation sourceSets.main.output
+    testmodRemapImplementation "me.melontini:handy-tests:0.1.0-1.20.1-build.2"
+}
+
+loom {
+    runs {
+        testClient {
+            client()
+            source sourceSets.testmod
+        }
+    }
+}
+
+loom.mods.register(project.name) {
+    sourceSet project.sourceSets.main
+}
+
+loom.mods.register(project.name + "-testmod") {
+    sourceSet project.sourceSets.testmod
 }
 
 processResources {
@@ -72,10 +110,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
 }
 
