@@ -38,6 +38,7 @@ sourceSets {
 loom {
     addRemapConfiguration("testmodRemapImplementation", (RemapConfigurationSettings configuration) -> {
         configuration.getTargetConfigurationName().convention("testmodImplementation")
+        configuration.getSourceSet().convention(sourceSets.testmod)
         configuration.getOnCompileClasspath().convention(true)
         configuration.getOnRuntimeClasspath().convention(true)
         configuration.getPublishingMode().convention(RemapConfigurationSettings.PublishingMode.COMPILE_AND_RUNTIME)
