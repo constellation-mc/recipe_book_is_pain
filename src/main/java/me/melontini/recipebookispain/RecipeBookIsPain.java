@@ -25,9 +25,9 @@ public class RecipeBookIsPain {
     public static final boolean isOwOLoaded = FabricLoader.getInstance().isModLoaded("owo");
     public static final boolean isDarkMatterContentLoaded = FabricLoader.getInstance().isModLoaded("dark-matter-content");
 
-    public static List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
-    public static List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
-    public static BiMap<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = HashBiMap.create();
+    public static final List<RecipeBookGroup> CRAFTING_SEARCH_LIST = new ArrayList<>();
+    public static final List<RecipeBookGroup> CRAFTING_LIST = new ArrayList<>();
+    public static final BiMap<RecipeBookGroup, ItemGroup> RECIPE_BOOK_GROUP_TO_ITEM_GROUP = HashBiMap.create();
 
     public static ItemGroup toItemGroup(RecipeBookGroup recipeBookGroup) {
         return RECIPE_BOOK_GROUP_TO_ITEM_GROUP.get(recipeBookGroup);
