@@ -64,7 +64,10 @@ dependencies {
     }
 
     modImplementation libs.dark.matter.item.group
-    modCompileOnly libs.owo
+    modCompileOnly(libs.owo) {
+        exclude(group: "io.wispforest.endec")
+        exclude(group: "io.wispforest", module: "endec")
+    }
 
     testmodImplementation sourceSets.main.output
     testmodRemapImplementation(libs.handy.tests) {
@@ -127,7 +130,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

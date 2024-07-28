@@ -42,7 +42,7 @@ public class RecipeBookIsPain {
             MinecraftClient client = MinecraftClient.getInstance();
             double e = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
             double f = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
-            owoItemGroup.icon().render(context, widget.getX() + 9 + i, widget.getY() + 5, (int) e, (int) f, client.getTickDelta());
+            owoItemGroup.icon().render(context, widget.getX() + 9 + i, widget.getY() + 5, (int) e, (int) f, client.getRenderTickCounter().getTickDelta(true));
             return true;
         }
         return false;

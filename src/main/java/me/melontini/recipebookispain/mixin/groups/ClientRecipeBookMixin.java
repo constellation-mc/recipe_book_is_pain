@@ -43,7 +43,7 @@ public class ClientRecipeBookMixin {
         ItemGroups.getGroups().stream().filter(itemGroup -> itemGroup.getType() != ItemGroup.Type.HOTBAR && itemGroup.getType() != ItemGroup.Type.INVENTORY && itemGroup.getType() != ItemGroup.Type.SEARCH)
                 .forEach(itemGroup -> {
                     try {
-                        RecipeBookGroup recipeBookGroup = RecipeBookHelper.createGroup(new Identifier("rbip", "crafting_" + ItemGroups.getGroups().indexOf(itemGroup)), itemGroup.getIcon());
+                        RecipeBookGroup recipeBookGroup = RecipeBookHelper.createGroup(Identifier.of("rbip", "crafting_" + ItemGroups.getGroups().indexOf(itemGroup)), itemGroup.getIcon());
                         RECIPE_BOOK_GROUP_TO_ITEM_GROUP.put(recipeBookGroup, itemGroup);
 
                         CRAFTING_LIST.add(recipeBookGroup);
