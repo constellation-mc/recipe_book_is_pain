@@ -104,6 +104,11 @@ loom {
         testClient {
             client()
             source sourceSets.testmod
+            runDir("run_test_client")
+
+            properties([
+                    "handy-tests.auto-test": "true"
+            ])
         }
     }
 }
