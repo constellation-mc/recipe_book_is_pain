@@ -1,0 +1,11 @@
+name: Add to main board
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  publish:
+    uses: constellation-mc/actions/.github/workflows/add-to-main-project.yml@main
+    secrets: inherit
